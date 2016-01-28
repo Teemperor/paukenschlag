@@ -20,7 +20,7 @@
 #include <Character.h>
 #include "Guard.h"
 #include "GuardMonitorTask.h"
-
+#include "WanderTask.h"
 
 
 static std::default_random_engine generator;
@@ -55,15 +55,11 @@ public:
 void GuardAI::update(Guard& guard, Level& level, double deltaT) {
 
     if (level.time() > nextHeadAdjustTime) {
-        nextHeadAdjustTime = level.time() + 3;
+        nextHeadAdjustTime = level.time() + 1.5;
         guard.setHeadRotation(headRotationDistribution(generator));
     }
 
-    GuardTask* newTask = task_->update(guard, level, deltaT);
-
-    if (newTask != task_.get()) {
-        task_.reset(newTask);
-    }
+    task_->doUpdate(guard, level, deltaT);
 
     checkPlayerVisibility(guard, level, deltaT);
 
@@ -105,5 +101,5 @@ void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
 }
 
 GuardAI::GuardAI() {
-    task_.reset(new GuardMonitorTask());
+    task_.reset(new WanderTask());
 }

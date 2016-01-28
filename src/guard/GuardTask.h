@@ -18,12 +18,53 @@
 #ifndef SHOOTER_GUARDTASK_H
 #define SHOOTER_GUARDTASK_H
 
+#include <memory>
+
 class Guard;
 class Level;
 
 class GuardTask {
+
+    std::unique_ptr<GuardTask> childTask_;
+    bool finished_ = false;
+
 public:
-    virtual GuardTask* update(Guard& guard, Level& level, double deltaT) = 0;
+    virtual void update(Guard& guard, Level& level, double deltaT) = 0;
+
+    void doUpdate(Guard& guard, Level& level, double deltaT) {
+        if (childTask_) {
+            childTask_->doUpdate(guard, level, deltaT);
+            if (childTask_->finished()) {
+                childTask_.reset(nullptr);
+            }
+            passiveUpdate(guard, level, deltaT);
+        }
+        else
+            update(guard, level, deltaT);
+    }
+
+    virtual GuardTask* childTask() {
+        if (childTask_)
+            return childTask_.get();
+        return nullptr;
+    }
+
+    void childTask(GuardTask* guardTask) {
+        childTask_.reset(guardTask);
+    }
+
+    void finish() {
+        finished_ = true;
+    }
+
+    bool finished() {
+        return finished_;
+    }
+
+    virtual GuardTask* passiveUpdate(Guard& guard, Level& level, double deltaT) {
+
+    }
+
 };
 
 

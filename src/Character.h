@@ -24,12 +24,13 @@
 #include "Level.h"
 #include "Wall.h"
 #include "Weapon.h"
+#include "LegAnimation.h"
 
 
 class Character : public GameObject {
 
     sf::Sprite sprite_;
-    sf::Sprite footSprite_;
+    sf::Sprite headSprite_;
 
     const float friction = 99.1f;
     const float speed = 850.0f;
@@ -41,10 +42,16 @@ class Character : public GameObject {
 
     int usedHideaways = 0;
 
+    LegAnimation legAnimation_;
+    double walkAngle = 0;
+
 public:
-    Character(Level &level, float x, float y) : GameObject(&level), weapon(&level) {
-        sprite_ = TextureManager::instance().loadSprite("data/character.png");
-        footSprite_ = TextureManager::instance().loadSprite("data/characterFoot.png");
+    Character(Level &level, float x, float y) : GameObject(&level), weapon(&level), legAnimation_("data/player/legs.png", 14, 12) {
+        sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
+        sprite_.setOrigin(20, 20);
+
+        headSprite_ = TextureManager::instance().loadSprite("data/player/helmet.png");
+        headSprite_.setOrigin(9, 8);
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
@@ -67,22 +74,21 @@ public:
     }
 
     virtual void render(PlayerViewport &viewport) override {
-        footSprite_.setOrigin(16, 26);
-        footSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-        footSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-        footSprite_.setScale((float) std::cos(level().time() * 10), 1);
-        viewport.window().draw(footSprite_);
+        legAnimation_.render(position(), walkAngle, viewport);
 
-        sprite_.setOrigin(16, 26);
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
         sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
         viewport.window().draw(sprite_);
+
+        headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
+        headSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
+        viewport.window().draw(headSprite_);
 
         viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
 
         auto mousePos = sf::Mouse::getPosition(viewport.window());
         auto internalPos = viewport.window().mapPixelToCoords(mousePos);
-        body()->SetTransform(body()->GetPosition(), atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
+        body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
     }
 
     bool hidden() {
@@ -104,6 +110,7 @@ public:
 
                 if (acceleration > 0.2f) {
                     double rotation = std::atan2(controlY, controlX);
+                    walkAngle = rotation;
                     body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed * acceleration), (float32) (std::cos(rotation - M_PI / 2) * speed * acceleration)), body()->GetWorldCenter(), true);
                     body()->SetTransform(body()->GetPosition(), (float32) rotation);
                 }
@@ -113,7 +120,6 @@ public:
                         if (j == 6) {
                             weapon.tryShoot(body()->GetPosition(), body()->GetAngle());
                         } else {
-
                             std::cout << "FOO " << j << std::endl;
                         }
                     }
@@ -153,9 +159,14 @@ public:
 
             if (keyPressed) {
                 double rotation = std::atan2(controlY, controlX);
+                walkAngle = rotation;
                 body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed), (float32) (std::cos(rotation - M_PI / 2) * speed)), body()->GetWorldCenter(), true);
                 // TODO was replaced my mouse, delete this? body()->SetTransform(body()->GetPosition(), (float32) rotation);
             }
+            if (controlX != 0 || controlY != 0)
+                legAnimation_.state(LegAnimation::State::Running);
+            else
+                legAnimation_.state(LegAnimation::State::Standing);
         }
     }
 

@@ -24,10 +24,9 @@
 class GuardCombatTask : public GuardTask {
 
 public:
-    virtual GuardTask* update(Guard& guard, Level& level, double deltaT) override {
-        return this;
-    }
+    virtual void update(Guard& guard, Level& level, double deltaT) override {
 
+    }
 
 };
 

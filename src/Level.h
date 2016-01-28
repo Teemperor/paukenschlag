@@ -33,12 +33,14 @@ class Level : b2ContactListener {
     PlayerViewport* viewport_;
 
     sf::Sprite dirtySprite;
+    sf::Sprite sandSprite;
+    sf::Sprite alphaSprite;
+
+    sf::Shader shader;
+    sf::RenderTexture alphaTexture;
 
 public:
-    Level() : world_(b2Vec2(0.f, 0.f)) {
-        dirtySprite = TextureManager::instance().loadSprite("data/floor/sand.jpg");
-        world_.SetContactListener(this);
-    }
+    Level();
 
 
     virtual void BeginContact(b2Contact* contact) override {
@@ -55,24 +57,7 @@ public:
         objectB->endContact(objectA);
     }
 
-    void render(PlayerViewport& viewport) {
-        int x1 = ((int) (viewport.view().getCenter().x - viewport.view().getSize().x / 2) / (int) dirtySprite.getLocalBounds().width);
-        int y1 = ((int) (viewport.view().getCenter().y - viewport.view().getSize().y / 2) / (int) dirtySprite.getLocalBounds().height);
-        int x2 = ((int) (viewport.view().getCenter().x + viewport.view().getSize().x / 2) / (int) dirtySprite.getLocalBounds().width);
-        int y2 = ((int) (viewport.view().getCenter().y + viewport.view().getSize().y / 2) / (int) dirtySprite.getLocalBounds().height);
-
-
-        for (int x = x1; x <= x2; x++) {
-            for (int y = y1; y <= y2; y++) {
-                dirtySprite.setPosition(x * dirtySprite.getLocalBounds().width, y * dirtySprite.getLocalBounds().height);
-                viewport.window().draw(dirtySprite);
-            }
-        }
-
-        for (GameObject* object : objects_) {
-            object->render(viewport);
-        }
-    }
+    void render(PlayerViewport& viewport);
 
     void setViewport(PlayerViewport& viewport) {
         viewport_ = &viewport;

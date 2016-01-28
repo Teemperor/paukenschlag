@@ -16,3 +16,31 @@
 
 
 #include "SuspicionIndicator.h"
+#include <Level.h>
+
+void SuspicionIndicator::update(Level& level, double deltaT) {
+    if (alarmSwingFactor > 0) {
+        alarmSwingFactor -= 0.1f * deltaT;
+    } else {
+        alarmSwingFactor = 0;
+    }
+}
+
+void SuspicionIndicator::draw(PlayerViewport &viewport, float x, float y, double suspicion) {
+    if (suspicion >= 1) {
+        if (!isAlarmed) {
+            alarmSwingFactor = 0.5;
+        }
+        isAlarmed = true;
+        alarmSprite_.setPosition(x, y);
+        alarmSprite_.setScale(1 + alarmSwingFactor, 1 + alarmSwingFactor);
+
+        viewport.window().draw(alarmSprite_);
+    } else {
+        isAlarmed = false;
+        suspicionSprite_.setColor(sf::Color((sf::Uint8) (suspicion * 255), 0, 0, (sf::Uint8) (suspicion * 255)));
+        suspicionSprite_.setScale((float) suspicion, (float) suspicion);
+        suspicionSprite_.setPosition(x, y);
+        viewport.window().draw(suspicionSprite_);
+    }
+}

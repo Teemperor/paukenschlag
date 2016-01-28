@@ -20,6 +20,7 @@
 
 
 #include <Box2D/Common/b2Math.h>
+#include <cmath>
 
 class Utils {
 
@@ -33,6 +34,10 @@ public:
 
     static double dotProduct(const b2Vec2& a, const b2Vec2& b) {
         return a.x * b.x + a.y * b.y;
+    }
+
+    static double length(const b2Vec2& v) {
+        return std::sqrt(v.x * v.x + v.y * v.y);
     }
 };
 

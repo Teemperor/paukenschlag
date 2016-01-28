@@ -19,6 +19,7 @@
 #define SHOOTER_GUARD_H
 
 #include <iostream>
+#include <LegAnimation.h>
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Level.h"
@@ -26,6 +27,7 @@
 #include "Weapon.h"
 #include "SuspicionIndicator.h"
 #include "GuardAI.h"
+#include "FOVIndicator.h"
 
 
 class Guard : public GameObject {
@@ -34,11 +36,11 @@ class Guard : public GameObject {
 
     sf::Sprite deadSprite_;
     sf::Sprite sprite_;
-    sf::Sprite footSprite_;
     sf::Sprite headSprite_;
 
     const float friction = 99.1f;
-    const float speed = 850.0f;
+    const float walkSpeed = 350.0f;
+    const float runSpeed = 850.0f;
 
     Weapon weapon_;
 
@@ -51,13 +53,14 @@ class Guard : public GameObject {
 
     bool dead_ = false;
 
+    LegAnimation legAnimation;
+    FOVIndicator fovIndicator;
+
+
 public:
-    Guard(Level &level, float x, float y) : GameObject(&level), weapon_(&level) {
+    Guard(Level &level, float x, float y) : GameObject(&level), weapon_(&level), legAnimation("data/guard/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
         sprite_.setOrigin(20, 20);
-
-        footSprite_ = TextureManager::instance().loadSprite("data/guard/legs.png");
-        footSprite_.setOrigin(14, 12);
 
         headSprite_ = TextureManager::instance().loadSprite("data/guard/helmet.png");
         headSprite_.setOrigin(9, 8);
@@ -92,10 +95,10 @@ public:
             deadSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
             viewport.window().draw(deadSprite_);
         } else {
-            footSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-            footSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-            footSprite_.setScale((float) std::cos(level().time() * 5) * 1.2f, 1);
-            viewport.window().draw(footSprite_);
+
+            fovIndicator.render(viewport, position(), getViewDirection(), GuardAI::fieldOfView);
+
+            legAnimation.render(position(), body()->GetAngle(), viewport);
 
             sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
             sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
@@ -107,6 +110,32 @@ public:
 
             suspicionIndicator_.draw(viewport, SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y - 40, ai_.suspicioun());
         }
+    }
+
+
+
+    void rotateTo(const b2Vec2& target) {
+        body()->SetTransform(body()->GetPosition(),
+                             (float32) std::atan2(target.y - body()->GetPosition().y, target.x - body()->GetPosition().x));
+    }
+
+    void walkForward() {
+        legAnimation.state(LegAnimation::State::Walking);
+        body()->ApplyForce(b2Vec2((float32) (std::cos(body()->GetAngle()) * walkSpeed),
+                                  (float32) (std::cos(body()->GetAngle() - M_PI / 2) * walkSpeed)),
+                           body()->GetWorldCenter(), true);
+    }
+
+    void runForward() {
+        legAnimation.state(LegAnimation::State::Running);
+        body()->ApplyForce(b2Vec2((float32) (std::cos(body()->GetAngle()) * runSpeed),
+                                  (float32) (std::cos(body()->GetAngle() - M_PI / 2) * runSpeed)),
+                           body()->GetWorldCenter(), true);
+
+    }
+
+    void stopWalking() {
+        legAnimation.state(LegAnimation::State::Standing);
     }
 
     virtual void update(Level& level, double deltaT) override;

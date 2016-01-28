@@ -22,6 +22,8 @@
 
 void Guard::update(Level& level, double deltaT) {
     if (!dead_) {
+        suspicionIndicator_.update(level, deltaT);
+
         ai_.update(*this, level, deltaT);
         double headRotationDiff = headRotationTarget - headRotation;
 

@@ -34,12 +34,13 @@ class GuardAI {
 
     double suspicion_ = 0;
     double nextHeadAdjustTime = 0;
-    double fieldOfView = b2_pi;
 
     void checkPlayerVisibility(Guard& guard, Level& level, double deltaT);
 
 public:
     GuardAI();
+
+    static constexpr double fieldOfView = b2_pi * 0.8;
 
     void update(Guard& guard, Level& level, double deltaT);
 

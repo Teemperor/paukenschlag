@@ -20,14 +20,15 @@ int main()
 
     PlayerViewport viewport(&level, window);
 
-    new Wall(level, 600, 600);
+    new Wall(level, 200, 200);
     new Cover(level, 300, 600);
     new Crate(level, 100, 100);
     new Character(level, 250, 250);
-    new Hideaway(level, 150, 150);
+    for (int i = 0; i < 17; i++)
+        new Hideaway(level, 350 + i * 50, 350 + i * 30);
     new EscapeArea(level, 350, 150);
 
-    new Guard(level, 400, 800);
+    new Guard(level, 1000, 1000);
     level.setViewport(viewport);
 
     while (window.isOpen())

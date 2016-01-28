@@ -25,6 +25,9 @@ class SuspicionIndicator {
     sf::Sprite suspicionSprite_;
     sf::Sprite alarmSprite_;
 
+    bool isAlarmed = false;
+    float alarmSwingFactor = 0;
+
 public:
     SuspicionIndicator() {
         suspicionSprite_ = TextureManager::instance().loadSprite("data/emotes/suspicion.png");
@@ -33,17 +36,9 @@ public:
         alarmSprite_.setOrigin(2, 42);
     }
 
-    void draw(PlayerViewport &viewport, float x, float y, double suspicion) {
-        if (suspicion >= 1) {
-            alarmSprite_.setPosition(x, y);
-            viewport.window().draw(alarmSprite_);
-        } else {
-            suspicionSprite_.setColor(sf::Color((sf::Uint8) (suspicion * 255), 0, 0, (sf::Uint8) (suspicion * 255)));
-            suspicionSprite_.setScale((float) suspicion, (float) suspicion);
-            suspicionSprite_.setPosition(x, y);
-            viewport.window().draw(suspicionSprite_);
-        }
-    }
+    void update(Level& level, double deltaT);
+
+    void draw(PlayerViewport &viewport, float x, float y, double suspicion);
 };
 
 
