@@ -15,40 +15,39 @@
  */
 
 
-#ifndef SHOOTER_CRATE_H
-#define SHOOTER_CRATE_H
+#ifndef SHOOTER_LONGEFFECT_H
+#define SHOOTER_LONGEFFECT_H
 
 
 #include "GameObject.h"
-#include "TextureManager.h"
 #include "Level.h"
 
-class Crate : public GameObject {
+class LongEffect : public GameObject {
 
     sf::Sprite sprite_;
 
 public:
-    Crate(Level& level, float x, float y) : GameObject(&level) {
-        sprite_ = TextureManager::instance().loadSprite("data/crates/box.png");
+    LongEffect(Level& level, float x, float y) : GameObject(&level) {
+            sprite_ = TextureManager::instance().loadSprite("data/crates/box.png");
 
-        b2BodyDef BodyDef;
-        BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
-        BodyDef.type = b2_dynamicBody;
-        BodyDef.linearDamping = 10;
-        BodyDef.angularDamping = 10;
-        b2Body* Body = level.world().CreateBody(&BodyDef);
+            b2BodyDef BodyDef;
+            BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
+            BodyDef.type = b2_dynamicBody;
+            BodyDef.linearDamping = 10;
+            BodyDef.angularDamping = 10;
+            b2Body* Body = level.world().CreateBody(&BodyDef);
 
-        b2PolygonShape Shape;
-        Shape.SetAsBox((32.f/2)/SCALE, (32.f/2)/SCALE);
-        b2FixtureDef FixtureDef;
-        FixtureDef.density = 64.f;
-        FixtureDef.friction = 0.9f;
-        FixtureDef.shape = &Shape;
-        FixtureDef.userData = this;
-        Body->CreateFixture(&FixtureDef);
+            b2PolygonShape Shape;
+            Shape.SetAsBox((32.f/2)/SCALE, (32.f/2)/SCALE);
+            b2FixtureDef FixtureDef;
+            FixtureDef.density = 64.f;
+            FixtureDef.friction = 0.9f;
+            FixtureDef.shape = &Shape;
+            FixtureDef.userData = this;
+            Body->CreateFixture(&FixtureDef);
 
-        body(Body);
-        level.add(this);
+            body(Body);
+            level.add(this);
 
     }
 
@@ -68,4 +67,4 @@ public:
 };
 
 
-#endif //SHOOTER_CRATE_H
+#endif //SHOOTER_LONGEFFECT_H

@@ -20,10 +20,11 @@
 
 #include <Box2D/Box2D.h>
 #include <list>
+#include <iostream>
 #include "GameObject.h"
 class Character;
 
-class Level {
+class Level : b2ContactListener {
 
     b2World world_;
     std::list<GameObject*> objects_;
@@ -35,7 +36,23 @@ class Level {
 
 public:
     Level() : world_(b2Vec2(0.f, 0.f)) {
-        dirtySprite = TextureManager::instance().loadSprite("data/dirty.jpg");
+        dirtySprite = TextureManager::instance().loadSprite("data/floor/sand.jpg");
+        world_.SetContactListener(this);
+    }
+
+
+    virtual void BeginContact(b2Contact* contact) override {
+        GameObject* objectA = (GameObject*) contact->GetFixtureA()->GetUserData();
+        GameObject* objectB = (GameObject*) contact->GetFixtureB()->GetUserData();
+        objectA->startContact(objectB);
+        objectB->startContact(objectA);
+    }
+
+    virtual void EndContact(b2Contact* contact) override {
+        GameObject* objectA = (GameObject*) contact->GetFixtureA()->GetUserData();
+        GameObject* objectB = (GameObject*) contact->GetFixtureB()->GetUserData();
+        objectA->endContact(objectB);
+        objectB->endContact(objectA);
     }
 
     void render(PlayerViewport& viewport) {
@@ -65,7 +82,7 @@ public:
         world_.Step(1 / 60.f, 8, 3);
         time_ += 1 / 60.0f;
         for (GameObject* object : objects_) {
-            object->update(*this);
+            object->update(*this, 1 / 60.0f);
         }
     }
 

@@ -23,13 +23,14 @@
 #include "TextureManager.h"
 #include "Level.h"
 
-class Ground : public GameObject {
+class Wall : public GameObject {
 
     sf::Sprite sprite_;
 
 public:
-    Ground(Level& level, float x, float y) : GameObject(&level) {
-        sprite_ = TextureManager::instance().loadSprite("data/sandbags.png");
+    Wall(Level& level, float x, float y) : GameObject(&level) {
+        sprite_ = TextureManager::instance().loadSprite("data/landscape/rock1.png");
+        sprite_.setOrigin(sprite_.getLocalBounds().width / 2, sprite_.getLocalBounds().height / 2);
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
@@ -38,7 +39,7 @@ public:
         b2Body* Body = level.world().CreateBody(&BodyDef);
 
         b2PolygonShape Shape;
-        Shape.SetAsBox((107.f/2)/SCALE, (40.f/2)/SCALE);
+        Shape.SetAsBox((sprite_.getLocalBounds().width/2)/SCALE, (sprite_.getLocalBounds().height/2)/SCALE);
         b2FixtureDef FixtureDef;
         FixtureDef.density = 0.f;
         FixtureDef.shape = &Shape;
@@ -50,22 +51,12 @@ public:
     }
 
     virtual void render(PlayerViewport& viewport) override {
-        sprite_.setOrigin(107/2, 40/2);
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
         sprite_.setRotation(body()->GetAngle() * 180/b2_pi);
         viewport.window().draw(sprite_);
     }
 
-    virtual void update(Level& level) override {
-    }
-
-
-    virtual ObjectType type() const override {
-        return ObjectType::Landscape ;
-    }
-
-    virtual bool isCover() const override {
-        return true;
+    virtual void update(Level& level, double deltaT) override {
     }
 };
 

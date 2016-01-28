@@ -29,7 +29,7 @@ class Weapon {
     double lastTimeFired = 0;
     double fireInterval = 0.1;
     double precision = 0.06;
-    double passCoverChance = 30;
+    double passCoverChance = 8;
 
     static std::default_random_engine generator;
     static std::uniform_real_distribution<double> distribution;
@@ -50,19 +50,21 @@ class Weapon {
                                       const b2Vec2& normal, float32 fraction) override {
 
             GameObject* object = static_cast<GameObject*>(fixture->GetUserData());
-            double dist = Utils::distance(start, point);
-            if (object->isCover()) {
-                if (dist < 2)
-                    return -1;
-                else if (distribution(generator) < weapon->passCoverChance)
-                    return -1;
 
-            }
-            if (dist < closestDistance) {
-                closestDistance = dist;
-                target = fixture;
-                this->point = point;
-                this->normal = normal;
+            if (object->hittable()) {
+                double dist = Utils::distance(start, point);
+                if (object->isCover()) {
+                    if (dist < 2)
+                        return -1;
+                    else if (distribution(generator) < weapon->passCoverChance)
+                        return -1;
+                }
+                if (dist < closestDistance) {
+                    closestDistance = dist;
+                    target = fixture;
+                    this->point = point;
+                    this->normal = normal;
+                }
             }
 
             return -1;
@@ -98,6 +100,10 @@ public:
             level_->world().RayCast(&raycaster, point, p2);
 
             if (raycaster.target) {
+                GameObject* targetObject = (GameObject*) raycaster.target->GetUserData();
+
+                targetObject->damage(raycaster.point);
+
                 level_->viewport().addEffect(*level_, raycaster.point, angle);
 
                 b2Vec2 impactImpulse(cos(angle) * 2, sin(angle) * 2);

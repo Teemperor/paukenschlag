@@ -26,15 +26,10 @@
 
 class Level;
 
-enum class ObjectType {
-    Landscape,
-    Entity
-};
-
 class GameObject {
 
-    b2Body* body_;
-    Level* level_;
+    b2Body* body_ = nullptr;
+    Level* level_ = nullptr;
 
 public:
     GameObject() {
@@ -44,18 +39,26 @@ public:
     }
 
     virtual void render(PlayerViewport& viewport) = 0;
-    virtual void update(Level& level) = 0;
+    virtual void update(Level& level, double deltaT) = 0;
 
     void body(b2Body* newBody) {
         body_ = newBody;
     }
 
-    b2Body* body() {
-        return body_;
+    virtual void startContact(GameObject* other) {
+
     }
 
-    virtual ObjectType type() const {
-        return ObjectType::Landscape;
+    virtual void endContact(GameObject* other) {
+
+    }
+
+    virtual bool hittable() const {
+        return true;
+    }
+
+    b2Body* body() {
+        return body_;
     }
 
     Level& level() {
@@ -68,6 +71,9 @@ public:
 
     const b2Vec2& position() const {
         return body_->GetPosition();
+    }
+
+    virtual void damage(const b2Vec2& hitPos) {
     }
 
 };

@@ -35,7 +35,7 @@ class Effect {
 
 public:
     Effect(double time, b2Vec2 point, float rotation) {
-        sprite_ = TextureManager::instance().loadSprite("data/splash.png");
+        sprite_ = TextureManager::instance().loadSprite("data/effects/splash.png");
         sprite_.setOrigin(sprite_.getLocalBounds().width, sprite_.getLocalBounds().height/2);
         sprite_.setPosition(point.x * SCALE, point.y * SCALE);
         sprite_.setRotation(rotation * 180 / b2_pi);

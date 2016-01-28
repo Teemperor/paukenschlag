@@ -15,14 +15,17 @@
  */
 
 
-#ifndef SHOOTER_CONSTANTS_H
-#define SHOOTER_CONSTANTS_H
+#include "PlayerStatus.h"
 
-/* We need this to easily convert between pixel and real-world coordinates*/
-const float SCALE = 32.f;
-
-enum objectCategory {
-    THING =          0x0001,
-};
-
-#endif //SHOOTER_CONSTANTS_H
+void PlayerStatus::draw(sf::RenderTarget& target, float x, float y) {
+    x += itemCircle.getLocalBounds().width + radius;
+    y += itemCircle.getLocalBounds().height + radius;
+    itemCircle.setPosition(x, y - radius);
+    target.draw(itemCircle);
+    itemCircle.setPosition(x + radius, y);
+    target.draw(itemCircle);
+    itemCircle.setPosition(x, y + radius);
+    target.draw(itemCircle);
+    itemCircle.setPosition(x - radius, y);
+    target.draw(itemCircle);
+}

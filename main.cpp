@@ -2,23 +2,30 @@
 #include <SFML/Graphics.hpp>
 #include <PlayerViewport.h>
 #include <Level.h>
-#include <Ground.h>
+#include "Wall.h"
 #include <Crate.h>
 #include <Character.h>
-#include <Guard.h>
+#include <guard/Guard.h>
+#include <Hideaway.h>
+#include <goals/EscapeArea.h>
+#include <Cover.h>
 
 int main()
 {
-    sf::RenderWindow window(sf::VideoMode(800, 600, 32), "Test");
+    sf::RenderWindow window(sf::VideoMode(1700, 900, 32), "Test");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    PlayerViewport viewport(window);
-
     Level level;
-    new Ground(level, 300, 600);
+
+    PlayerViewport viewport(&level, window);
+
+    new Wall(level, 600, 600);
+    new Cover(level, 300, 600);
     new Crate(level, 100, 100);
     new Character(level, 250, 250);
+    new Hideaway(level, 150, 150);
+    new EscapeArea(level, 350, 150);
 
     new Guard(level, 400, 800);
     level.setViewport(viewport);
@@ -31,6 +38,8 @@ int main()
 
         level.render(viewport);
         viewport.renderEffects(level);
+        viewport.renderUI();
+        viewport.updateUI(1 / 60.0f);
         level.update();
 
         window.display();

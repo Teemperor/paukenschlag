@@ -15,18 +15,26 @@
  */
 
 
+#include "Guard.h"
 #include "Character.h"
-#include "Hideaway.h"
+#include "Utils.h"
 
-void Character::startContact(GameObject* other) {
-    if (dynamic_cast<Hideaway*>(other)) {
-        usedHideaways++;
+
+void Guard::update(Level& level, double deltaT) {
+    if (!dead_) {
+        ai_.update(*this, level, deltaT);
+        double headRotationDiff = headRotationTarget - headRotation;
+
+        double headRotationChange = deltaT;
+
+        if (std::abs(headRotationDiff) < headRotationChange) {
+            headRotation = headRotationTarget;
+        } else {
+            if (headRotationTarget > headRotation) {
+                headRotation += headRotationChange;
+            } else {
+                headRotation -= headRotationChange;
+            }
+        }
     }
-}
-
-void Character::endContact(GameObject* other) {
-    if (dynamic_cast<Hideaway*>(other)) {
-        usedHideaways--;
-    }
-
 }

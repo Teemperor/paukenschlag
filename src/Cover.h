@@ -15,45 +15,42 @@
  */
 
 
-#ifndef SHOOTER_CRATE_H
-#define SHOOTER_CRATE_H
+#ifndef SHOOTER_COVER_H
+#define SHOOTER_COVER_H
 
 
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Level.h"
 
-class Crate : public GameObject {
+class Cover  : public GameObject {
 
     sf::Sprite sprite_;
 
 public:
-    Crate(Level& level, float x, float y) : GameObject(&level) {
-        sprite_ = TextureManager::instance().loadSprite("data/crates/box.png");
+    Cover(Level& level, float x, float y) : GameObject(&level) {
+        sprite_ = TextureManager::instance().loadSprite("data/cover/sandbags.png");
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
-        BodyDef.type = b2_dynamicBody;
-        BodyDef.linearDamping = 10;
-        BodyDef.angularDamping = 10;
+        BodyDef.angle = 0.1f;
+        BodyDef.type = b2_staticBody;
         b2Body* Body = level.world().CreateBody(&BodyDef);
 
         b2PolygonShape Shape;
-        Shape.SetAsBox((32.f/2)/SCALE, (32.f/2)/SCALE);
+        Shape.SetAsBox((107.f/2)/SCALE, (40.f/2)/SCALE);
         b2FixtureDef FixtureDef;
-        FixtureDef.density = 64.f;
-        FixtureDef.friction = 0.9f;
+        FixtureDef.density = 0.f;
         FixtureDef.shape = &Shape;
         FixtureDef.userData = this;
         Body->CreateFixture(&FixtureDef);
 
         body(Body);
         level.add(this);
-
     }
 
     virtual void render(PlayerViewport& viewport) override {
-        sprite_.setOrigin(16.f, 16.f);
+        sprite_.setOrigin(107/2, 40/2);
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
         sprite_.setRotation(body()->GetAngle() * 180/b2_pi);
         viewport.window().draw(sprite_);
@@ -62,10 +59,10 @@ public:
     virtual void update(Level& level, double deltaT) override {
     }
 
+
     virtual bool isCover() const override {
         return true;
     }
 };
 
-
-#endif //SHOOTER_CRATE_H
+#endif //SHOOTER_COVER_H

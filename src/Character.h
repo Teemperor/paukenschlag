@@ -22,7 +22,7 @@
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Level.h"
-#include "Ground.h"
+#include "Wall.h"
 #include "Weapon.h"
 
 
@@ -38,6 +38,8 @@ class Character : public GameObject {
     float controlY = 0;
 
     Weapon weapon;
+
+    int usedHideaways = 0;
 
 public:
     Character(Level &level, float x, float y) : GameObject(&level), weapon(&level) {
@@ -64,8 +66,6 @@ public:
         level.add(this);
     }
 
-
-
     virtual void render(PlayerViewport &viewport) override {
         footSprite_.setOrigin(16, 26);
         footSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
@@ -85,7 +85,15 @@ public:
         body()->SetTransform(body()->GetPosition(), atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
     }
 
-    virtual void update(Level &level) override {
+    bool hidden() {
+        return usedHideaways != 0;
+    }
+
+    virtual void startContact(GameObject* other);
+
+    virtual void endContact(GameObject* other);
+
+    virtual void update(Level &level, double deltaT) override {
         for (unsigned i = 0; i < 8; i++) {
             if (sf::Joystick::isConnected(i)) {
                 controlX = sf::Joystick::getAxisPosition(i, sf::Joystick::Axis::X) / 100;
@@ -149,8 +157,12 @@ public:
                 // TODO was replaced my mouse, delete this? body()->SetTransform(body()->GetPosition(), (float32) rotation);
             }
         }
-
     }
+
+    virtual void damage(const b2Vec2& hitPos) override {
+        std::cout << "Player was hit" << std::endl;
+    }
+
 };
 
 

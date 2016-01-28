@@ -15,14 +15,4 @@
  */
 
 
-#ifndef SHOOTER_CONSTANTS_H
-#define SHOOTER_CONSTANTS_H
-
-/* We need this to easily convert between pixel and real-world coordinates*/
-const float SCALE = 32.f;
-
-enum objectCategory {
-    THING =          0x0001,
-};
-
-#endif //SHOOTER_CONSTANTS_H
+#include "EscapeArea.h"

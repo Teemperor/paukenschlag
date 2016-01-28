@@ -15,14 +15,17 @@
  */
 
 
-#ifndef SHOOTER_CONSTANTS_H
-#define SHOOTER_CONSTANTS_H
+#include "Hideaway.h"
+#include "Character.h"
 
-/* We need this to easily convert between pixel and real-world coordinates*/
-const float SCALE = 32.f;
+void Hideaway::startContact(GameObject* other) {
+    if (dynamic_cast<Character*>(other)) {
+        playersInside++;
+    }
+}
 
-enum objectCategory {
-    THING =          0x0001,
-};
-
-#endif //SHOOTER_CONSTANTS_H
+void Hideaway::endContact(GameObject* other) {
+    if (dynamic_cast<Character*>(other)) {
+        playersInside--;
+    }
+}

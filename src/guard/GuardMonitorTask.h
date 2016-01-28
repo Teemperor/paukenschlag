@@ -15,15 +15,20 @@
  */
 
 
-#ifndef SHOOTER_BULLETIMPACT_H
-#define SHOOTER_BULLETIMPACT_H
+#ifndef SHOOTER_GUARDMONITORTASK_H
+#define SHOOTER_GUARDMONITORTASK_H
 
 
-#include "Effect.h"
+#include "GuardTask.h"
 
-class BulletImpact : public Effect {
+class GuardMonitorTask : public GuardTask {
 
+public:
+    virtual GuardTask* update(Guard& guard, Level& level, double deltaT) override {
+
+        return this;
+    }
 };
 
 
-#endif //SHOOTER_BULLETIMPACT_H
+#endif //SHOOTER_GUARDMONITORTASK_H

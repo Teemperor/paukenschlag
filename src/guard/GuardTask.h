@@ -15,14 +15,16 @@
  */
 
 
-#ifndef SHOOTER_CONSTANTS_H
-#define SHOOTER_CONSTANTS_H
+#ifndef SHOOTER_GUARDTASK_H
+#define SHOOTER_GUARDTASK_H
 
-/* We need this to easily convert between pixel and real-world coordinates*/
-const float SCALE = 32.f;
+class Guard;
+class Level;
 
-enum objectCategory {
-    THING =          0x0001,
+class GuardTask {
+public:
+    virtual GuardTask* update(Guard& guard, Level& level, double deltaT) = 0;
 };
 
-#endif //SHOOTER_CONSTANTS_H
+
+#endif //SHOOTER_GUARDTASK_H

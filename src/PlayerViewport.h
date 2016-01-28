@@ -22,6 +22,7 @@
 #include <SFML/Graphics.hpp>
 #include "Effect.h"
 #include <list>
+#include <ui/PlayerStatus.h>
 
 class Level;
 
@@ -30,13 +31,26 @@ class PlayerViewport {
     sf::RenderWindow& window_;
     sf::View view_;
     std::list<Effect> effects_;
+    Level* level_;
+
+    PlayerStatus status;
 
 public:
-    PlayerViewport(sf::RenderWindow& window) : window_(window),
+    PlayerViewport(Level* level, sf::RenderWindow& window) : window_(window),
                                                view_(sf::Vector2f(window_.getSize().x / 2, window_.getSize().y / 2),
-                                                     sf::Vector2f(window_.getSize().x, window_.getSize().y)
-    ) {
+                                                     sf::Vector2f(window_.getSize().x, window_.getSize().y)),
+                                               level_(level)
+    {
 
+    }
+
+    void renderUI() {
+        window_.setView(window_.getDefaultView());
+        status.draw(window_, 0, 0);
+    }
+
+    void updateUI(double deltaT) {
+        status.update(deltaT);
     }
 
     void apply() {
@@ -49,6 +63,10 @@ public:
 
     sf::RenderWindow& window() {
         return window_;
+    }
+
+    Level& level() {
+        return *level_;
     }
 
     void renderEffects(Level& level);
