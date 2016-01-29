@@ -57,8 +57,8 @@ void Level::render(PlayerViewport& viewport) {
     shader.setParameter("alphaMap", alphaTexture.getTexture());
     viewport.window().draw(sandSprite, &shader);
 
-    for (GameObject* object : objects_) {
-        object->render(viewport);
+    for (auto iter = objects_.rbegin(); iter != objects_.rend(); iter++) {
+        (*iter)->render(viewport);
     }
 }
 
@@ -72,4 +72,12 @@ Level::Level() : world_(b2Vec2(0.f, 0.f)) {
 
     shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
     shader.setParameter("texture", sf::Shader::CurrentTexture);
+}
+
+void Level::update() {
+    world_.Step(1 / 60.f, 8, 3);
+    time_ += 1 / 60.0f;
+    for (GameObject* object : objects_) {
+        object->update(*this, 1 / 60.0f);
+    }
 }

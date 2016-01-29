@@ -24,7 +24,7 @@
 #include "TextureManager.h"
 #include "Level.h"
 #include "Wall.h"
-#include "Weapon.h"
+#include "Item.h"
 #include "SuspicionIndicator.h"
 #include "GuardAI.h"
 #include "FOVIndicator.h"
@@ -42,7 +42,7 @@ class Guard : public GameObject {
     const float walkSpeed = 350.0f;
     const float runSpeed = 850.0f;
 
-    Weapon weapon_;
+    Item weapon_;
 
     float headRotation = 0;
     float headRotationTarget = 0;
@@ -58,7 +58,7 @@ class Guard : public GameObject {
 
 
 public:
-    Guard(Level &level, float x, float y) : GameObject(&level), weapon_(&level), legAnimation("data/guard/legs.png", 14, 12) {
+    Guard(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
         sprite_.setOrigin(20, 20);
 
@@ -138,11 +138,17 @@ public:
         legAnimation.state(LegAnimation::State::Standing);
     }
 
+    GuardAI& ai() {
+        return ai_;
+    }
+
     virtual void update(Level& level, double deltaT) override;
 
     void setHeadRotation(float newTargetRotation) {
         headRotationTarget = newTargetRotation;
     }
+
+    void shoot();
 
     virtual void damage(const b2Vec2& hitPos) override {
         dead_ = true;
@@ -156,7 +162,7 @@ public:
         return body()->GetAngle() + headRotation;
     }
 
-    Weapon& weapon() {
+    Item & weapon() {
         return weapon_;
     }
 

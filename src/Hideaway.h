@@ -23,7 +23,7 @@
 #include "TextureManager.h"
 #include "Level.h"
 #include "Wall.h"
-#include "Weapon.h"
+#include "Item.h"
 
 
 class Hideaway : public GameObject {

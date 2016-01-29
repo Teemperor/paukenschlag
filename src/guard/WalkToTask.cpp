@@ -23,10 +23,22 @@ void WalkToTask::update(Guard& guard, Level& level, double deltaT) {
 
     double distance = Utils::distance(guard.position(), target_);
 
-    if (distance > 0.3f) {
+    if (distance > goalDistance) {
         guard.walkForward();
     } else {
         guard.stopWalking();
         finish();
     }
+
+    if (lastStuckCheck > level.time() + stuckCheckInterval) {
+        lastStuckCheck = level.time();
+        if (lastDistanceToTarget <= distance) {
+            finish();
+        }
+        lastDistanceToTarget = distance;
+    }
+}
+
+WalkToTask::WalkToTask(const b2Vec2& target, double goalDistance) : target_(target), goalDistance(goalDistance) {
+    lastDistanceToTarget = std::numeric_limits<double>::max();
 }

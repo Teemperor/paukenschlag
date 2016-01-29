@@ -16,3 +16,25 @@
 
 
 #include "GuardCombatTask.h"
+#include "GuardAI.h"
+#include "Guard.h"
+#include "WalkToTask.h"
+
+void GuardCombatTask::update(Guard& guard, Level& level, double deltaT) {
+    if (!guard.ai().visiblePlayers().empty()) {
+        target = guard.ai().visiblePlayers().front();
+        childTask(new WalkToTask(guard.ai().visiblePlayers().front()->position(), 5));
+    }
+}
+
+void GuardCombatTask::passiveUpdate(Guard& guard, Level& level, double deltaT) {
+    if (guard.ai().visiblePlayers().empty()) {
+        if (target)
+            childTask(new WalkToTask(target->position(), 5));
+        else
+            finish();
+    } else {
+        guard.rotateTo(target->position());
+        guard.shoot();
+    }
+}

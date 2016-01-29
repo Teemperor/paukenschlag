@@ -40,3 +40,7 @@ void Guard::update(Level& level, double deltaT) {
         }
     }
 }
+
+void Guard::shoot() {
+    weapon().tryUse(level(), position(), body()->GetAngle());
+}

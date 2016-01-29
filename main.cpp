@@ -9,26 +9,32 @@
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>
 #include <Cover.h>
+#include <ItemList.h>
 
 int main()
 {
+    ItemList::instance();
+
     sf::RenderWindow window(sf::VideoMode(1700, 900, 32), "Test");
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
     Level level;
 
+    Character* character = new Character(level, 250, 250);
+
     PlayerViewport viewport(&level, window);
+    viewport.player(character);
 
     new Wall(level, 200, 200);
     new Cover(level, 300, 600);
     new Crate(level, 100, 100);
-    new Character(level, 250, 250);
     for (int i = 0; i < 17; i++)
-        new Hideaway(level, 350 + i * 50, 350 + i * 30);
+        new Hideaway(level, 350 + i * 40, 350 + i * 40);
     new EscapeArea(level, 350, 150);
 
-    new Guard(level, 1000, 1000);
+    for (int i = 0; i < 3; i++)
+        new Guard(level, 1000 + 80 * i, 1000);
     level.setViewport(viewport);
 
     while (window.isOpen())

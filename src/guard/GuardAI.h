@@ -37,6 +37,8 @@ class GuardAI {
 
     void checkPlayerVisibility(Guard& guard, Level& level, double deltaT);
 
+    std::list<Character*> visiblePlayers_;
+
 public:
     GuardAI();
 
@@ -54,6 +56,10 @@ public:
 
     double suspicioun() const {
         return suspicion_;
+    }
+
+    std::list<Character*> visiblePlayers() {
+        return visiblePlayers_;
     }
 
 };

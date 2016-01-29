@@ -19,8 +19,8 @@
 #include "Level.h"
 
 
-void PlayerViewport::addEffect(Level& level, b2Vec2 point, float rotation) {
-    effects_.push_back(Effect(level.time(), point, rotation));
+void PlayerViewport::addEffect(Level& level, b2Vec2 point, float rotation, const sf::Sprite& sprite) {
+    effects_.push_back(Effect(level.time(), point, rotation, sprite));
 }
 
 void PlayerViewport::renderEffects(Level& level) {

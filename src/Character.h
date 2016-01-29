@@ -23,8 +23,9 @@
 #include "TextureManager.h"
 #include "Level.h"
 #include "Wall.h"
-#include "Weapon.h"
+#include "Item.h"
 #include "LegAnimation.h"
+#include "ItemList.h"
 
 
 class Character : public GameObject {
@@ -38,7 +39,11 @@ class Character : public GameObject {
     float controlX = 0;
     float controlY = 0;
 
-    Weapon weapon;
+    Item items_[4] = {ItemList::get(ItemId::Knife),
+                      ItemList::get(ItemId::AK47),
+                      ItemList::get(ItemId::M14),
+                      ItemList::get(ItemId::Pistol9mmSilenced)};
+    unsigned selectedItem_ = 0;
 
     int usedHideaways = 0;
 
@@ -46,7 +51,7 @@ class Character : public GameObject {
     double walkAngle = 0;
 
 public:
-    Character(Level &level, float x, float y) : GameObject(&level), weapon(&level), legAnimation_("data/player/legs.png", 14, 12) {
+    Character(Level &level, float x, float y) : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
         sprite_.setOrigin(20, 20);
 
@@ -71,6 +76,18 @@ public:
 
         body(Body);
         level.add(this);
+    }
+
+    Item& currentItem() {
+        return items_[selectedItem_];
+    }
+
+    Item* items() {
+        return items_;
+    }
+
+    unsigned selectedItemIndex() {
+        return selectedItem_;
     }
 
     virtual void render(PlayerViewport &viewport) override {
@@ -99,76 +116,7 @@ public:
 
     virtual void endContact(GameObject* other);
 
-    virtual void update(Level &level, double deltaT) override {
-        for (unsigned i = 0; i < 8; i++) {
-            if (sf::Joystick::isConnected(i)) {
-                controlX = sf::Joystick::getAxisPosition(i, sf::Joystick::Axis::X) / 100;
-                controlY = sf::Joystick::getAxisPosition(i, sf::Joystick::Axis::Y) / 100;
-                float acceleration = std::sqrt(controlX * controlX + controlY * controlY);
-                if (acceleration > 1)
-                    acceleration = 1;
-
-                if (acceleration > 0.2f) {
-                    double rotation = std::atan2(controlY, controlX);
-                    walkAngle = rotation;
-                    body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed * acceleration), (float32) (std::cos(rotation - M_PI / 2) * speed * acceleration)), body()->GetWorldCenter(), true);
-                    body()->SetTransform(body()->GetPosition(), (float32) rotation);
-                }
-
-                for (unsigned j = 0; j < sf::Joystick::getButtonCount(i); j++) {
-                    if (sf::Joystick::isButtonPressed(i, j)) {
-                        if (j == 6) {
-                            weapon.tryShoot(body()->GetPosition(), body()->GetAngle());
-                        } else {
-                            std::cout << "FOO " << j << std::endl;
-                        }
-                    }
-                }
-            } else {
-                if (i != 0)
-                    return;
-                break;
-            }
-        }
-
-        if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-            weapon.tryShoot(body()->GetPosition(), body()->GetAngle());
-        }
-
-        {
-            bool keyPressed = false;
-            controlX = 0;
-            controlY = 0;
-
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-                keyPressed = true;
-                controlX -= 1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-                keyPressed = true;
-                controlX += 1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::W)) {
-                keyPressed = true;
-                controlY -= 1;
-            }
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                keyPressed = true;
-                controlY += 1;
-            }
-
-            if (keyPressed) {
-                double rotation = std::atan2(controlY, controlX);
-                walkAngle = rotation;
-                body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed), (float32) (std::cos(rotation - M_PI / 2) * speed)), body()->GetWorldCenter(), true);
-                // TODO was replaced my mouse, delete this? body()->SetTransform(body()->GetPosition(), (float32) rotation);
-            }
-            if (controlX != 0 || controlY != 0)
-                legAnimation_.state(LegAnimation::State::Running);
-            else
-                legAnimation_.state(LegAnimation::State::Standing);
-        }
-    }
+    virtual void update(Level &level, double deltaT);
 
     virtual void damage(const b2Vec2& hitPos) override {
         std::cout << "Player was hit" << std::endl;

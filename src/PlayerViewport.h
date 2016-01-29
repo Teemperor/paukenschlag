@@ -32,6 +32,7 @@ class PlayerViewport {
     sf::View view_;
     std::list<Effect> effects_;
     Level* level_;
+    Character* player_;
 
     PlayerStatus status;
 
@@ -47,6 +48,15 @@ public:
     void renderUI() {
         window_.setView(window_.getDefaultView());
         status.draw(window_, 0, 0);
+    }
+
+    Character* player() {
+        return player_;
+    }
+
+    void player(Character* player) {
+        player_ = player;
+        status = PlayerStatus(player);
     }
 
     void updateUI(double deltaT) {
@@ -71,7 +81,7 @@ public:
 
     void renderEffects(Level& level);
 
-    void addEffect(Level& level, b2Vec2 point, float rotation);
+    void addEffect(Level& level, b2Vec2 point, float rotation, const sf::Sprite& sprite);
 
 };
 

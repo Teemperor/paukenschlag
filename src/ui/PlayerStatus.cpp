@@ -16,16 +16,27 @@
 
 
 #include "PlayerStatus.h"
+#include <Item.h>
+#include "Character.h"
 
 void PlayerStatus::draw(sf::RenderTarget& target, float x, float y) {
     x += itemCircle.getLocalBounds().width + radius;
     y += itemCircle.getLocalBounds().height + radius;
-    itemCircle.setPosition(x, y - radius);
+
+    renderCircle(character->items()[0], target, x, y - radius, character->selectedItemIndex() == 0);
+    renderCircle(character->items()[1], target, x + radius, y, character->selectedItemIndex() == 1);
+    renderCircle(character->items()[2], target, x, y + radius, character->selectedItemIndex() == 2);
+    renderCircle(character->items()[3], target, x - radius, y, character->selectedItemIndex() == 3);
+}
+
+void PlayerStatus::renderCircle(Item& item, sf::RenderTarget& target, float x, float y, bool active) {
+    itemCircle.setPosition(x, y);
+    if (active)
+        itemCircle.setColor(sf::Color::Red);
+    else
+        itemCircle.setColor(sf::Color::Green);
     target.draw(itemCircle);
-    itemCircle.setPosition(x + radius, y);
-    target.draw(itemCircle);
-    itemCircle.setPosition(x, y + radius);
-    target.draw(itemCircle);
-    itemCircle.setPosition(x - radius, y);
-    target.draw(itemCircle);
+    sf::Sprite& icon = item.icon();
+    icon.setPosition(x, y);
+    target.draw(icon);
 }

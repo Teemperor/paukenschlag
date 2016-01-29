@@ -15,25 +15,16 @@
  */
 
 
-#ifndef SHOOTER_WALKTOTASK_H
-#define SHOOTER_WALKTOTASK_H
+#include "ItemList.h"
 
+ItemList::ItemList() {
+    items_[ItemId::Knife].name("Knife").icon("data/weapons/knife.png").fireInterval(0.5).range(2);
+    items_[ItemId::None].name("Empty");
+    items_[ItemId::AK47].name("AK-47").icon("data/weapons/ak47_icon.png");
+    items_[ItemId::M14].name("M14").icon("data/weapons/m14_icon.png");
+    items_[ItemId::Pistol9mmSilenced].name("9mm (Silenced)").icon("data/weapons/9mm_silenced_icon.png");
 
-#include <Box2D/Common/b2Math.h>
-#include "GuardTask.h"
-
-class WalkToTask : public GuardTask {
-
-    b2Vec2 target_;
-    double lastDistanceToTarget = 0;
-    double stuckCheckInterval = 1;
-    double lastStuckCheck = 0;
-    double goalDistance = 0.3;
-
-public:
-    WalkToTask(const b2Vec2& target, double goalDistance = 0.3);
-    virtual void update(Guard& guard, Level& level, double deltaT);
-};
-
-
-#endif //SHOOTER_WALKTOTASK_H
+    for (auto& pair : items_) {
+        pair.second.id(pair.first);
+    }
+}

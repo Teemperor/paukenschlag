@@ -61,7 +61,7 @@ public:
         return finished_;
     }
 
-    virtual GuardTask* passiveUpdate(Guard& guard, Level& level, double deltaT) {
+    virtual void passiveUpdate(Guard& guard, Level& level, double deltaT) {
 
     }
 

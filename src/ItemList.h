@@ -15,25 +15,32 @@
  */
 
 
-#ifndef SHOOTER_WALKTOTASK_H
-#define SHOOTER_WALKTOTASK_H
+#ifndef SHOOTER_ITEMLIST_H
+#define SHOOTER_ITEMLIST_H
 
 
-#include <Box2D/Common/b2Math.h>
-#include "GuardTask.h"
+#include "Item.h"
 
-class WalkToTask : public GuardTask {
+class ItemList {
 
-    b2Vec2 target_;
-    double lastDistanceToTarget = 0;
-    double stuckCheckInterval = 1;
-    double lastStuckCheck = 0;
-    double goalDistance = 0.3;
+    std::map<ItemId, Item> items_;
+
+    ItemList();
 
 public:
-    WalkToTask(const b2Vec2& target, double goalDistance = 0.3);
-    virtual void update(Guard& guard, Level& level, double deltaT);
+    static const ItemList& instance() {
+        static ItemList instance_;
+        return instance_;
+    }
+
+    const Item& item(ItemId id) const {
+        return items_.find(id)->second;
+    }
+
+    static const Item& get(ItemId id) {
+        return instance().item(id);
+    }
 };
 
 
-#endif //SHOOTER_WALKTOTASK_H
+#endif //SHOOTER_ITEMLIST_H

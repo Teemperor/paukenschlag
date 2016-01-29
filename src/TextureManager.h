@@ -19,11 +19,11 @@
 #define SHOOTER_TEXTUREMANAGER_H
 
 #include <SFML/Graphics.hpp>
-#include <map>
+#include <unordered_map>
 
 class TextureManager {
 
-    std::map<std::string, sf::Texture*> texturesByPath_;
+    std::unordered_map<std::string, sf::Texture*> texturesByPath_;
 
 public:
     static TextureManager& instance() {

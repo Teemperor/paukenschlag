@@ -63,13 +63,7 @@ public:
         viewport_ = &viewport;
     }
 
-    void update() {
-        world_.Step(1 / 60.f, 8, 3);
-        time_ += 1 / 60.0f;
-        for (GameObject* object : objects_) {
-            object->update(*this, 1 / 60.0f);
-        }
-    }
+    void update();
 
     void add(GameObject* object) {
         objects_.push_back(object);

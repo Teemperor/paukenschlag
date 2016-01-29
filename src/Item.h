@@ -23,20 +23,41 @@
 #include "Utils.h"
 #include <random>
 
-class Weapon {
+class ItemList;
 
-    Level* level_;
+enum class ItemId {
+    None,
+    AK47,
+    Knife,
+    M14,
+    Pistol9mmSilenced,
+};
+
+class Item {
+
+    friend class ItemList;
+
+    ItemId id_;
+
+    std::string name_;
+
+    sf::Sprite icon_;
+    double range_ = 15;
     double lastTimeFired = 0;
-    double fireInterval = 0.1;
-    double precision = 0.06;
-    double passCoverChance = 8;
+    double fireInterval_ = 0.1;
+    double precision_ = 0.06;
+    double passCoverChance_ = 8;
+    unsigned bullets_ = 1;
+    unsigned maxBullets_ = 1;
+    bool hasAmmuniation_ = false;
 
     static std::default_random_engine generator;
     static std::uniform_real_distribution<double> distribution;
 
+
     class Raycaster : public b2RayCastCallback {
     public:
-        Weapon* weapon;
+        Item * weapon;
 
         b2Vec2 start;
 
@@ -56,7 +77,7 @@ class Weapon {
                 if (object->isCover()) {
                     if (dist < 2)
                         return -1;
-                    else if (distribution(generator) < weapon->passCoverChance)
+                    else if (distribution(generator) < weapon->passCoverChance_)
                         return -1;
                 }
                 if (dist < closestDistance) {
@@ -72,48 +93,63 @@ class Weapon {
     };
 
 public:
-    Weapon(Level* level) : level_(level) {
+    Item() {
     }
 
-    bool canShoot() {
-        return level_->time() > lastTimeFired + fireInterval;
+    bool canUse(Level &level) {
+        if (hasAmmuniation_ && bullets_ == 0)
+            return false;
+        return level.time() > lastTimeFired + fireInterval_;
     }
 
-    bool tryShoot(b2Vec2 point, float angle) {
-        if (canShoot()) {
-            std::random_device rd;
-            std::mt19937 gen(rd());
-            std::normal_distribution<> d(0,precision);
+    bool tryUse(Level& level, b2Vec2 point, float angle);
 
-            angle += d(gen);
+    sf::Sprite& icon() {
+        return icon_;
+    }
 
-            lastTimeFired = level_->time();
+    Item& icon(const std::string& path) {
+        icon_ = TextureManager::instance().loadSprite(path);
+        icon_.setOrigin(icon_.getLocalBounds().width / 2, icon_.getLocalBounds().height / 2);
 
-            b2Vec2 p2((float32) (cos(angle) * 15), (float32) (sin(angle) * 15));
+        float diameter = std::sqrt(icon_.getLocalBounds().width * icon_.getLocalBounds().width + icon_.getLocalBounds().height * icon_.getLocalBounds().height);
 
-            p2 += point;
+        icon_.setScale(57 / diameter, 57 / diameter);
+        return *this;
+    }
 
-            Raycaster raycaster;
-            raycaster.start = point;
-            raycaster.weapon = this;
+    Item& name(const std::string& name) {
+        name_ = name;
+        return *this;
+    }
 
-            level_->world().RayCast(&raycaster, point, p2);
+    Item& fireInterval(double interval) {
+        fireInterval_ = interval;
+        return *this;
+    }
+    Item& precision(double value) {
+        precision_ = value;
+        return *this;
+    }
+    Item& passCoverChance(double value) {
+        passCoverChance_ = value;
+        return *this;
+    }
 
-            if (raycaster.target) {
-                GameObject* targetObject = (GameObject*) raycaster.target->GetUserData();
+    Item& id(ItemId id) {
+        id_ = id;
+        return *this;
+    }
 
-                targetObject->damage(raycaster.point);
+    Item& range(double range) {
+        range_ = range;
+        return *this;
+    }
 
-                level_->viewport().addEffect(*level_, raycaster.point, angle);
-
-                b2Vec2 impactImpulse(cos(angle) * 2, sin(angle) * 2);
-
-                raycaster.target->GetBody()->ApplyLinearImpulse(impactImpulse, point, true);
-            }
-
-            return true;
-        }
-        return false;
+    Item& bullets(unsigned bullets) {
+        bullets_ = maxBullets_ = bullets;
+        hasAmmuniation_ = true;
+        return *this;
     }
 };
 

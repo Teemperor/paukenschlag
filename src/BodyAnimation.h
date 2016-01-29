@@ -15,7 +15,15 @@
  */
 
 
-#include "Weapon.h"
+#ifndef SHOOTER_BODYANIMATION_H
+#define SHOOTER_BODYANIMATION_H
 
-std::default_random_engine Weapon::generator;
-std::uniform_real_distribution<double> Weapon::distribution(0, 100.0);
+
+class BodyAnimation {
+
+public:
+
+};
+
+
+#endif //SHOOTER_BODYANIMATION_H

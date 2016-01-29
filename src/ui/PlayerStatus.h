@@ -22,12 +22,15 @@
 #include <TextureManager.h>
 
 class Character;
+class Item;
 
 class PlayerStatus {
 
     sf::Sprite itemCircle;
     float radius = 48;
     Character* character;
+
+    void renderCircle(Item& item, sf::RenderTarget& target, float x, float y, bool active);
 
 public:
     PlayerStatus(Character* character = nullptr) : character(character) {

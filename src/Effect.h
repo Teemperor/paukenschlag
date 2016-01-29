@@ -34,9 +34,8 @@ class Effect {
     double duration_ = 0.1;
 
 public:
-    Effect(double time, b2Vec2 point, float rotation) {
-        sprite_ = TextureManager::instance().loadSprite("data/effects/splash.png");
-        sprite_.setOrigin(sprite_.getLocalBounds().width, sprite_.getLocalBounds().height/2);
+    Effect(double time, b2Vec2 point, float rotation, const sf::Sprite& sprite) {
+        sprite_ = sprite;
         sprite_.setPosition(point.x * SCALE, point.y * SCALE);
         sprite_.setRotation(rotation * 180 / b2_pi);
         startTime_ = time;

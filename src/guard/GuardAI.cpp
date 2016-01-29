@@ -66,12 +66,11 @@ void GuardAI::update(Guard& guard, Level& level, double deltaT) {
     /*if (Utils::distance(guard.body()->GetPosition(), walkTarget) > 3) {
         guard.body()->SetTransform(guard.body()->GetPosition(), (float32) atan2(walkTarget.y - guard.body()->GetPosition().y, walkTarget.x - guard.body()->GetPosition().x));
     }*/
-
-    if (suspicion_ >= 1)
-        guard.weapon().tryShoot(guard.position(), guard.body()->GetAngle());
 }
 
 void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
+    visiblePlayers_.clear();
+
     modSuspicion(-deltaT / 3.0f);
 
     for (Character* player : level.players()) {
@@ -95,11 +94,12 @@ void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
         level.world().RayCast(&raycaster, guard.body()->GetPosition(), player->body()->GetPosition());
 
         if (raycaster.seesTarget()) {
+            visiblePlayers_.push_back(player);
             modSuspicion(deltaT / 1.0f);
         }
     }
 }
 
 GuardAI::GuardAI() {
-    task_.reset(new WanderTask());
+    task_.reset(new GuardMonitorTask());
 }

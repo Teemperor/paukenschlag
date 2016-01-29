@@ -23,10 +23,13 @@
 
 class GuardMonitorTask : public GuardTask {
 
-public:
-    virtual void update(Guard& guard, Level& level, double deltaT) override {
+    bool inCombat = false;
 
-    }
+public:
+    virtual void update(Guard& guard, Level& level, double deltaT);
+
+
+    virtual void passiveUpdate(Guard& guard, Level& level, double deltaT) override;
 };
 
 

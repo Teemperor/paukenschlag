@@ -15,25 +15,4 @@
  */
 
 
-#ifndef SHOOTER_WALKTOTASK_H
-#define SHOOTER_WALKTOTASK_H
-
-
-#include <Box2D/Common/b2Math.h>
-#include "GuardTask.h"
-
-class WalkToTask : public GuardTask {
-
-    b2Vec2 target_;
-    double lastDistanceToTarget = 0;
-    double stuckCheckInterval = 1;
-    double lastStuckCheck = 0;
-    double goalDistance = 0.3;
-
-public:
-    WalkToTask(const b2Vec2& target, double goalDistance = 0.3);
-    virtual void update(Guard& guard, Level& level, double deltaT);
-};
-
-
-#endif //SHOOTER_WALKTOTASK_H
+#include "BodyAnimation.h"
