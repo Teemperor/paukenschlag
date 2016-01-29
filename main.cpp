@@ -10,6 +10,7 @@
 #include <goals/EscapeArea.h>
 #include <Cover.h>
 #include <ItemList.h>
+#include <menu/IngameState.h>
 
 int main()
 {
@@ -19,52 +20,29 @@ int main()
     window.setFramerateLimit(60);
     window.setVerticalSyncEnabled(true);
 
-    Level level;
-
-    Character* character = new Character(level, 250, 250);
-
-    PlayerViewport viewport(&level, window);
-    viewport.player(character);
-
-    new Wall(level, 200, 200);
-    new Cover(level, 300, 600);
-    new Crate(level, 100, 100);
-    for (int i = 0; i < 17; i++)
-        new Hideaway(level, 350 + i * 40, 350 + i * 40);
-    new EscapeArea(level, 350, 150);
-
-    for (int i = 0; i < 3; i++)
-        new Guard(level, 1000 + 80 * i, 1000);
-    level.setViewport(viewport);
+    GameState* currentState = new IngameState(window);
 
     while (window.isOpen())
     {
-        viewport.apply();
 
         window.clear(sf::Color::Black);
 
-        level.render(viewport);
-        viewport.renderEffects(level);
-        viewport.renderUI();
-        viewport.updateUI(1 / 60.0f);
-        level.update();
+        currentState->update(1 / 60.0);
+        currentState->draw(window);
 
         window.display();
 
         sf::Event event;
         while (window.pollEvent(event))
         {
-            if (event.type == sf::Event:: JoystickConnected)
-            {
+            if (event.type == sf::Event:: JoystickConnected) {
                 std::cout << "joystick connected: " << event.joystickConnect.joystickId << std::endl;
-            }
-            else if (event.type == sf::Event::JoystickDisconnected)
-            {
+            } else if (event.type == sf::Event::JoystickDisconnected) {
                 std::cout << "joystick disconnected: " << event.joystickConnect.joystickId << std::endl;
-            }
-            else if (event.type == sf::Event::Closed)
-            {
+            } else if (event.type == sf::Event::Closed) {
                 window.close();
+            } else {
+                currentState->handleEvent(event);
             }
         }
 

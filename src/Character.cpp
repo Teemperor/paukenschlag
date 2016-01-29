@@ -63,7 +63,8 @@ void Character::update(Level &level, double deltaT) {
     }
 
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
-        currentItem().tryUse(level, body()->GetPosition(), body()->GetAngle());
+        if (currentItem().isAutomatic())
+            currentItem().tryUse(level, body()->GetPosition(), body()->GetAngle());
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -112,4 +113,8 @@ void Character::update(Level &level, double deltaT) {
         else
             legAnimation_.state(LegAnimation::State::Standing);
     }
+}
+
+void Character::pulledTrigger() {
+    currentItem().tryUse(level(), body()->GetPosition(), body()->GetAngle());
 }

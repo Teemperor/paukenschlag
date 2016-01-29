@@ -18,11 +18,14 @@
 #include "ItemList.h"
 
 ItemList::ItemList() {
-    items_[ItemId::Knife].name("Knife").icon("data/weapons/knife.png").fireInterval(0.5).range(2);
+    items_[ItemId::Knife].name("Knife").icon("data/weapons/knife.png").fireInterval(0.2).range(2);
     items_[ItemId::None].name("Empty");
-    items_[ItemId::AK47].name("AK-47").icon("data/weapons/ak47_icon.png");
-    items_[ItemId::M14].name("M14").icon("data/weapons/m14_icon.png");
-    items_[ItemId::Pistol9mmSilenced].name("9mm (Silenced)").icon("data/weapons/9mm_silenced_icon.png");
+    items_[ItemId::AK47].name("AK-47").icon("data/weapons/ak47_icon.png")
+            .fireInterval(0.1).range(15).automatic(true);
+    items_[ItemId::M14].name("M14").icon("data/weapons/m14_icon.png")
+            .fireInterval(0.1).range(15).precision(0.01);
+    items_[ItemId::Pistol9mmSilenced].name("9mm (Silenced)").icon("data/weapons/9mm_silenced_icon.png")
+            .fireInterval(0.2).range(8).precision(0.01);
 
     for (auto& pair : items_) {
         pair.second.id(pair.first);

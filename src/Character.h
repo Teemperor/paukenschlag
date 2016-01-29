@@ -108,6 +108,8 @@ public:
         body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
     }
 
+    void pulledTrigger();
+
     bool hidden() {
         return usedHideaways != 0;
     }

@@ -50,10 +50,10 @@ class Item {
     unsigned bullets_ = 1;
     unsigned maxBullets_ = 1;
     bool hasAmmuniation_ = false;
+    bool automatic_ = false;
 
     static std::default_random_engine generator;
     static std::uniform_real_distribution<double> distribution;
-
 
     class Raycaster : public b2RayCastCallback {
     public:
@@ -136,8 +136,17 @@ public:
         return *this;
     }
 
+    bool isAutomatic() {
+        return automatic_;
+    }
+
     Item& id(ItemId id) {
         id_ = id;
+        return *this;
+    }
+
+    Item& automatic(bool automatic) {
+        automatic_ = automatic;
         return *this;
     }
 
