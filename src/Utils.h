@@ -21,10 +21,13 @@
 
 #include <Box2D/Common/b2Math.h>
 #include <cmath>
+#include <random>
 
 class Utils {
 
+
 public:
+    static std::default_random_engine rndGen;
 
     static double distance(const b2Vec2& start, const b2Vec2& end) {
         double diffX = start.x - end.x;

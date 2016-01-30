@@ -24,27 +24,24 @@
 #include <Box2D/Common/b2Math.h>
 #include "Constants.h"
 #include "TextureManager.h"
+#include "EffectData.h"
 
 class PlayerViewport;
 
 class Effect {
 
-    sf::Sprite sprite_;
+    EffectData data_;
     double startTime_;
-    double duration_ = 0.1;
 
 public:
-    Effect(double time, b2Vec2 point, float rotation, const sf::Sprite& sprite) {
-        sprite_ = sprite;
-        sprite_.setPosition(point.x * SCALE, point.y * SCALE);
-        sprite_.setRotation(rotation * 180 / b2_pi);
+    Effect(double time, const EffectData& data) : data_(data) {
         startTime_ = time;
     }
 
     virtual void render(PlayerViewport& viewport, double time);
 
     bool outOfTime(double currentTime) {
-        return startTime_ + duration_ < currentTime;
+        return startTime_ + data_.duration() < currentTime;
     }
 
 };

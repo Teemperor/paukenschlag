@@ -53,16 +53,18 @@ class Item {
     sf::Sprite sprite_;
     sf::Sprite icon_;
     double range_ = 15;
-    double lastTimeFired = 0;
+    double nextFireTime = 0;
     double fireInterval_ = 0.1;
     double precision_ = 0.06;
     double passCoverChance_ = 8;
+    unsigned bulletsInMag_ = 0;
+    unsigned magSize_ = 1;
     unsigned bullets_ = 1;
     unsigned maxBullets_ = 1;
-    bool hasAmmuniation_ = false;
+    double reloadTime_ = 1;
+    bool hasAmmunition_ = false;
     bool automatic_ = false;
 
-    static std::default_random_engine generator;
     static std::uniform_real_distribution<double> distribution;
 
     class Raycaster : public b2RayCastCallback {
@@ -87,7 +89,7 @@ class Item {
                 if (object->isCover()) {
                     if (dist < 2)
                         return -1;
-                    else if (distribution(generator) < weapon->passCoverChance_)
+                    else if (distribution(Utils::rndGen) < weapon->passCoverChance_)
                         return -1;
                 }
                 if (dist < closestDistance) {
@@ -102,14 +104,20 @@ class Item {
         }
     };
 
+    void createDust(Level& level, b2Vec2 point, float angle);
+
+    void fillMagazine() {
+        while (bullets_ > 0 && bulletsInMag_ < magSize_) {
+            bullets_--;
+            bulletsInMag_++;
+        }
+    }
 public:
     Item() {
     }
 
     bool canUse(Level &level) {
-        if (hasAmmuniation_ && bullets_ == 0)
-            return false;
-        return level.time() > lastTimeFired + fireInterval_;
+        return level.time() > nextFireTime;
     }
 
     bool tryUse(Level& level, b2Vec2 point, float angle);
@@ -141,10 +149,12 @@ public:
         fireInterval_ = interval;
         return *this;
     }
+
     Item& precision(double value) {
         precision_ = value;
         return *this;
     }
+
     Item& passCoverChance(double value) {
         passCoverChance_ = value;
         return *this;
@@ -182,9 +192,12 @@ public:
         return *this;
     }
 
-    Item& bullets(unsigned bullets) {
+    Item& bullets(unsigned magSize, unsigned bullets, double reloadTime) {
+        magSize_ = magSize;
         bullets_ = maxBullets_ = bullets;
-        hasAmmuniation_ = true;
+        reloadTime_ = reloadTime;
+        hasAmmunition_ = true;
+        fillMagazine();
         return *this;
     }
 };

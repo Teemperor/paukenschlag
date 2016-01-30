@@ -20,29 +20,37 @@
 #include <string>
 #include <fstream>
 
-std::default_random_engine Item::generator;
 std::uniform_real_distribution<double> Item::distribution(0, 100.0);
 
 bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
 
-
-
     if (canUse(level)) {
-        if (hasAmmuniation_)
-            bullets_--;
+        if (hasAmmunition_) {
+            if (bulletsInMag_ > 0) {
+                bulletsInMag_--;
+            } else if (bullets_ > 0) {
+                fillMagazine();
+                nextFireTime = level.time() + reloadTime_;
+                return false;
+            } else {
+                return false;
+            }
+        }
 
         if (id_ == ItemId::Knife) {
-            sf::Sprite slashSprite = TextureManager::instance().loadSprite("data/weapons/slash.png");
-            slashSprite.setOrigin(-10, slashSprite.getLocalBounds().height / 2);
 
             std::uniform_real_distribution<float> distribution(-0.3f, 0.3f);
 
+            float xScale, yScale;
+
+            xScale = 1 + distribution(Utils::rndGen);
             if (rand() % 2 == 0) {
-                slashSprite.setScale(1 + distribution(generator), -1 + distribution(generator));
+                yScale = -1 + distribution(Utils::rndGen);
             } else {
-                slashSprite.setScale(1 + distribution(generator), 1 + distribution(generator));
+                yScale = 1 + distribution(Utils::rndGen);
             }
-            level.viewport().addEffect(level, point, angle, slashSprite);
+
+            level.viewport().addEffect(level, EffectData("data/weapons/slash.png", -10, 26, angle).duration(0.1).scale(xScale, yScale).position(point));
         }
 
 
@@ -52,7 +60,7 @@ bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
 
         angle += d(gen);
 
-        lastTimeFired = level.time();
+        nextFireTime = level.time() + fireInterval_;
 
         b2Vec2 p2((float32) (cos(angle) * range_), (float32) (sin(angle) * range_));
 
@@ -69,16 +77,26 @@ bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
 
             targetObject->damage(raycaster.point);
 
-            sf::Sprite splashSprite = TextureManager::instance().loadSprite("data/effects/splash.png");
-            splashSprite.setOrigin(splashSprite.getLocalBounds().width / 2, splashSprite.getLocalBounds().height / 2);
-            level.viewport().addEffect(level, raycaster.point, angle, splashSprite);
-
             b2Vec2 impactImpulse(cos(angle) * 2, sin(angle) * 2);
 
             raycaster.target->GetBody()->ApplyLinearImpulse(impactImpulse, point, true);
+        } else {
+            if (class_ != ItemClass::Knife)
+                createDust(level, p2, angle);
         }
 
-        return true;
+        return false;
     }
-    return false;
+    return true;
+}
+
+void Item::createDust(Level& level, b2Vec2 point, float angle) {
+
+    std::uniform_real_distribution<float> distribution(0, 10);
+    std::normal_distribution<float> distributionPoint(0, 0.6);
+
+    level.viewport().addEffect(level,
+                               EffectData("data/effects/dust.png", distribution(Utils::rndGen))
+                                       .position({point.x + distributionPoint(Utils::rndGen), point.y + distributionPoint(Utils::rndGen)})
+                               .duration(1).fadesOut(true).scalesIn(true));
 }

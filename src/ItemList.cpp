@@ -33,6 +33,7 @@ ItemList::ItemList() {
             .fireInterval(0.1)
             .range(15)
             .automatic(true)
+            .bullets(30, 60, 2)
             .itemClass(ItemClass::Rifle)
             .sprite("data/weapons/ak47.png", 30, 2);
     items_[ItemId::Glock]

@@ -44,3 +44,21 @@ void Guard::update(Level& level, double deltaT) {
 void Guard::shoot() {
     weapon().tryUse(level(), position(), body()->GetAngle());
 }
+
+void Guard::initBodyAnimation() {
+    sf::Sprite idleSprite = TextureManager::instance().loadSprite("data/guard/idle.png");
+    idleSprite.setOrigin(20, 20);
+    bodyAnimation_.idleSprite(idleSprite);
+
+    sf::Sprite pistolSprite = TextureManager::instance().loadSprite("data/guard/pistol.png");
+    pistolSprite.setOrigin(19, 19);
+    bodyAnimation_.pistolSprite(pistolSprite, {24, 6});
+
+    sf::Sprite rifleSprite = TextureManager::instance().loadSprite("data/guard/rifle.png");
+    rifleSprite.setOrigin(19, 19);
+    bodyAnimation_.rifleSprite(rifleSprite, {21, 9});
+
+    sf::Sprite knifeSprite = TextureManager::instance().loadSprite("data/guard/knife.png");
+    knifeSprite.setOrigin(19, 19);
+    bodyAnimation_.knifeSprite(knifeSprite, {17, 0});
+}

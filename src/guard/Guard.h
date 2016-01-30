@@ -54,19 +54,30 @@ class Guard : public GameObject {
     bool dead_ = false;
 
     LegAnimation legAnimation;
+    BodyAnimation bodyAnimation_;
+
     FOVIndicator fovIndicator;
 
+    void initBodyAnimation();
 
 public:
     Guard(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
         sprite_.setOrigin(20, 20);
 
+        if (Utils::rndGen() % 100 < 30) {
+            weapon_ = ItemList::get(ItemId::AK47);
+        } else {
+            weapon_ = ItemList::get(ItemId::Glock);
+        }
+
         headSprite_ = TextureManager::instance().loadSprite("data/guard/helmet.png");
         headSprite_.setOrigin(9, 8);
 
         deadSprite_ = TextureManager::instance().loadSprite("data/guard/dead.png");
         deadSprite_.setOrigin(40, 45);
+
+        initBodyAnimation();
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
@@ -100,9 +111,7 @@ public:
 
             legAnimation.render(position(), body()->GetAngle(), viewport);
 
-            sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-            sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-            viewport.window().draw(sprite_);
+            bodyAnimation_.draw(weapon_, viewport, position(), body()->GetAngle());
 
             headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
             headSprite_.setRotation((body()->GetAngle() + headRotation) * 180 / b2_pi);

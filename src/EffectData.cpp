@@ -15,18 +15,4 @@
  */
 
 
-#include "Effect.h"
-#include "PlayerViewport.h"
-
-void Effect::render(PlayerViewport& viewport, double time) {
-    float progress = (float) ((time - startTime_) / data_.duration());
-    if (progress > 1)
-        progress = 1;
-    if (data_.fadesIn())
-        data_.sprite().setColor(sf::Color(255, 255, 255, (sf::Uint8) (progress * 255)));
-    else if (data_.fadesOut())
-        data_.sprite().setColor(sf::Color(255, 255, 255, (sf::Uint8) ((1 - progress) * 255)));
-    if (data_.scalesIn())
-        data_.sprite().setScale(progress, progress);
-    viewport.window().draw(data_.sprite());
-}
+#include "EffectData.h"

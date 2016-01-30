@@ -18,11 +18,6 @@
 #include "PlayerViewport.h"
 #include "Level.h"
 
-
-void PlayerViewport::addEffect(Level& level, b2Vec2 point, float rotation, const sf::Sprite& sprite) {
-    effects_.push_back(Effect(level.time(), point, rotation, sprite));
-}
-
 void PlayerViewport::renderEffects(Level& level) {
     for (Effect& effect : effects_) {
         effect.render(*this, level.time());
@@ -35,4 +30,8 @@ void PlayerViewport::renderEffects(Level& level) {
         } else
             break;
     }
+}
+
+void PlayerViewport::addEffect(Level& level, const EffectData& data) {
+    effects_.push_back(Effect(level.time(), data));
 }

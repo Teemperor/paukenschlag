@@ -81,7 +81,7 @@ public:
 
     void renderEffects(Level& level);
 
-    void addEffect(Level& level, b2Vec2 point, float rotation, const sf::Sprite& sprite);
+    void addEffect(Level& level, const EffectData& data);
 
 };
 

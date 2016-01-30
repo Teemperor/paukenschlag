@@ -16,3 +16,5 @@
 
 
 #include "Utils.h"
+
+std::default_random_engine Utils::rndGen;

@@ -135,7 +135,6 @@ void Character::initBodyAnimation() {
     sf::Sprite knifeSprite = TextureManager::instance().loadSprite("data/player/knife.png");
     knifeSprite.setOrigin(19, 19);
     bodyAnimation_.knifeSprite(knifeSprite, {17, 0});
-
 }
 
 void Character::render(PlayerViewport &viewport) {
