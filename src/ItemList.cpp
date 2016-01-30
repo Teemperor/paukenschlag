@@ -18,14 +18,45 @@
 #include "ItemList.h"
 
 ItemList::ItemList() {
-    items_[ItemId::Knife].name("Knife").icon("data/weapons/knife.png").fireInterval(0.2).range(2);
-    items_[ItemId::None].name("Empty");
-    items_[ItemId::AK47].name("AK-47").icon("data/weapons/ak47_icon.png")
-            .fireInterval(0.1).range(15).automatic(true);
-    items_[ItemId::M14].name("M14").icon("data/weapons/m14_icon.png")
-            .fireInterval(0.1).range(15).precision(0.01);
-    items_[ItemId::Pistol9mmSilenced].name("9mm (Silenced)").icon("data/weapons/9mm_silenced_icon.png")
-            .fireInterval(0.2).range(8).precision(0.01);
+    items_[ItemId::Knife]
+            .name("Knife")
+            .icon("data/weapons/knife_icon.png")
+            .fireInterval(0.2)
+            .range(2)
+            .itemClass(ItemClass::Knife)
+            .sprite("data/weapons/knife.png", 4, 1);
+    items_[ItemId::None]
+            .name("Empty").itemClass(ItemClass::None);
+    items_[ItemId::AK47]
+            .name("AK-47")
+            .icon("data/weapons/ak47_icon.png")
+            .fireInterval(0.1)
+            .range(15)
+            .automatic(true)
+            .itemClass(ItemClass::Rifle)
+            .sprite("data/weapons/ak47.png", 30, 2);
+    items_[ItemId::Glock]
+            .name("Glock")
+            .icon("data/weapons/glock_icon.png")
+            .fireInterval(0.1)
+            .range(15)
+            .itemClass(ItemClass::Pistol)
+            .sprite("data/weapons/glock.png", 2, 2);
+    items_[ItemId::M14].name("M14")
+            .icon("data/weapons/m14_icon.png")
+            .fireInterval(0.1)
+            .range(15)
+            .precision(0.01)
+            .itemClass(ItemClass::Rifle)
+            .sprite("data/weapons/m14.png", 30, 2);
+    items_[ItemId::Pistol9mmSilenced]
+            .name("9mm (Silenced)")
+            .icon("data/weapons/9mm_silenced_icon.png")
+            .fireInterval(0.2)
+            .range(15)
+            .precision(0.01)
+            .itemClass(ItemClass::Pistol)
+            .sprite("data/weapons/9mm.png", 2, 2);
 
     for (auto& pair : items_) {
         pair.second.id(pair.first);

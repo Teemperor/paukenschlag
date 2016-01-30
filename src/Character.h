@@ -26,6 +26,7 @@
 #include "Item.h"
 #include "LegAnimation.h"
 #include "ItemList.h"
+#include "BodyAnimation.h"
 
 
 class Character : public GameObject {
@@ -41,7 +42,7 @@ class Character : public GameObject {
 
     Item items_[4] = {ItemList::get(ItemId::Knife),
                       ItemList::get(ItemId::AK47),
-                      ItemList::get(ItemId::M14),
+                      ItemList::get(ItemId::Glock),
                       ItemList::get(ItemId::Pistol9mmSilenced)};
     unsigned selectedItem_ = 0;
 
@@ -50,6 +51,10 @@ class Character : public GameObject {
     LegAnimation legAnimation_;
     double walkAngle = 0;
 
+    BodyAnimation bodyAnimation_;
+
+    void initBodyAnimation();
+
 public:
     Character(Level &level, float x, float y) : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
@@ -57,6 +62,8 @@ public:
 
         headSprite_ = TextureManager::instance().loadSprite("data/player/helmet.png");
         headSprite_.setOrigin(9, 8);
+
+        initBodyAnimation();
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
@@ -90,23 +97,7 @@ public:
         return selectedItem_;
     }
 
-    virtual void render(PlayerViewport &viewport) override {
-        legAnimation_.render(position(), walkAngle, viewport);
-
-        sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-        sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-        viewport.window().draw(sprite_);
-
-        headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-        headSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-        viewport.window().draw(headSprite_);
-
-        viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-
-        auto mousePos = sf::Mouse::getPosition(viewport.window());
-        auto internalPos = viewport.window().mapPixelToCoords(mousePos);
-        body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
-    }
+    virtual void render(PlayerViewport &viewport);
 
     void pulledTrigger();
 

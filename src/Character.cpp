@@ -118,3 +118,38 @@ void Character::update(Level &level, double deltaT) {
 void Character::pulledTrigger() {
     currentItem().tryUse(level(), body()->GetPosition(), body()->GetAngle());
 }
+
+void Character::initBodyAnimation() {
+    sf::Sprite idleSprite = TextureManager::instance().loadSprite("data/player/idle.png");
+    idleSprite.setOrigin(20, 20);
+    bodyAnimation_.idleSprite(idleSprite);
+
+    sf::Sprite pistolSprite = TextureManager::instance().loadSprite("data/player/pistol.png");
+    pistolSprite.setOrigin(19, 19);
+    bodyAnimation_.pistolSprite(pistolSprite, {24, 6});
+
+    sf::Sprite rifleSprite = TextureManager::instance().loadSprite("data/player/rifle.png");
+    rifleSprite.setOrigin(19, 19);
+    bodyAnimation_.rifleSprite(rifleSprite, {21, 9});
+
+    sf::Sprite knifeSprite = TextureManager::instance().loadSprite("data/player/knife.png");
+    knifeSprite.setOrigin(19, 19);
+    bodyAnimation_.knifeSprite(knifeSprite, {17, 0});
+
+}
+
+void Character::render(PlayerViewport &viewport) {
+    legAnimation_.render(position(), walkAngle, viewport);
+
+    bodyAnimation_.draw(currentItem(), viewport, position(), body()->GetAngle());
+
+    headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
+    headSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
+    viewport.window().draw(headSprite_);
+
+    viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
+
+    auto mousePos = sf::Mouse::getPosition(viewport.window());
+    auto internalPos = viewport.window().mapPixelToCoords(mousePos);
+    body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
+}

@@ -30,7 +30,15 @@ enum class ItemId {
     AK47,
     Knife,
     M14,
+    Glock,
     Pistol9mmSilenced,
+};
+
+enum class ItemClass {
+    None,
+    Knife,
+    Pistol,
+    Rifle
 };
 
 class Item {
@@ -38,9 +46,11 @@ class Item {
     friend class ItemList;
 
     ItemId id_;
+    ItemClass class_;
 
     std::string name_;
 
+    sf::Sprite sprite_;
     sf::Sprite icon_;
     double range_ = 15;
     double lastTimeFired = 0;
@@ -108,6 +118,10 @@ public:
         return icon_;
     }
 
+    sf::Sprite& sprite() {
+        return sprite_;
+    }
+
     Item& icon(const std::string& path) {
         icon_ = TextureManager::instance().loadSprite(path);
         icon_.setOrigin(icon_.getLocalBounds().width / 2, icon_.getLocalBounds().height / 2);
@@ -136,8 +150,21 @@ public:
         return *this;
     }
 
+    ItemClass& itemClass() {
+        return class_;
+    }
+
     bool isAutomatic() {
         return automatic_;
+    }
+
+    Item& sprite(const std::string& path, float ox, float oy) {
+        sprite_ = TextureManager::instance().loadSprite(path);
+        sprite_.setOrigin(ox, oy);
+    }
+
+    Item& itemClass(ItemClass itemClass) {
+        class_ = itemClass;
     }
 
     Item& id(ItemId id) {
