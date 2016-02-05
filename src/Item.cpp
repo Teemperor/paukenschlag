@@ -53,12 +53,9 @@ bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
             level.viewport().addEffect(level, EffectData("data/weapons/slash.png", -10, 26, angle).duration(0.1).scale(xScale, yScale).position(point));
         }
 
-
-        std::random_device rd;
-        std::mt19937 gen(rd());
         std::normal_distribution<> d(0, precision_);
 
-        angle += d(gen);
+        angle += d(Utils::rndGen);
 
         nextFireTime = level.time() + fireInterval_;
 
