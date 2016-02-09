@@ -42,6 +42,23 @@ public:
     static double length(const b2Vec2& v) {
         return std::sqrt(v.x * v.x + v.y * v.y);
     }
+
+    static void animateTo(double& current, double target, double deltaT, double speed) {
+        double deltaValue = deltaT * speed;
+        if (target < current) {
+            if (current - target <= deltaValue) {
+                current = target;
+            } else {
+                current -= deltaValue;
+            }
+        } else {
+            if (target - current <= deltaValue) {
+                current = target;
+            } else {
+                current += deltaValue;
+            }
+        }
+    }
 };
 
 

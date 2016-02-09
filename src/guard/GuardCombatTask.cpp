@@ -35,6 +35,6 @@ void GuardCombatTask::passiveUpdate(Guard& guard, Level& level, double deltaT) {
             finish();
     } else {
         guard.rotateTo(target->position());
-        guard.shoot();
+        guard.shoot(target->position());
     }
 }

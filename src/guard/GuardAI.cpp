@@ -35,9 +35,11 @@ public:
 
     virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
                                   const b2Vec2& normal, float32 fraction) override {
+        GameObject* object = static_cast<GameObject*>(fixture->GetUserData());
+
         if (fixture == target) {
             targetDistance = Utils::distance(start, point);
-        } else {
+        } else if (!object->transparent()){
             double d = Utils::distance(start, point);
             if (d < closestDistance) {
                 closestDistance = d;
@@ -83,7 +85,7 @@ void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
         if (angle < 0)
             angle += b2_pi * 2;
 
-        if (angle > fieldOfView / 2 && angle < b2_pi * 2 - fieldOfView / 2) {
+        if (angle > fieldOfView_ / 2 && angle < b2_pi * 2 - fieldOfView_ / 2) {
             continue;
         }
 

@@ -21,25 +21,30 @@
 
 #include "GameObject.h"
 #include "Level.h"
+#include "Utils.h"
 
 class LongEffect : public GameObject {
 
     sf::Sprite sprite_;
+    double scale_ = 0;
 
 public:
-    LongEffect(Level& level, float x, float y) : GameObject(&level) {
-            sprite_ = TextureManager::instance().loadSprite("data/crates/box.png");
+    LongEffect(Level& level, double x, double y) : GameObject(&level) {
+            sprite_ = TextureManager::instance().loadSprite("data/effects/blood1.png");
+            sprite_.setOrigin(sprite_.getLocalBounds().width / 2, sprite_.getLocalBounds().height / 2);
 
             b2BodyDef BodyDef;
-            BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
+            BodyDef.position = b2Vec2( x, y);
             BodyDef.type = b2_dynamicBody;
             BodyDef.linearDamping = 10;
             BodyDef.angularDamping = 10;
             b2Body* Body = level.world().CreateBody(&BodyDef);
 
             b2PolygonShape Shape;
-            Shape.SetAsBox((32.f/2)/SCALE, (32.f/2)/SCALE);
+            Shape.SetAsBox(1, 1);
             b2FixtureDef FixtureDef;
+            FixtureDef.filter.categoryBits = 0;
+            FixtureDef.filter.maskBits = 0;
             FixtureDef.density = 64.f;
             FixtureDef.friction = 0.9f;
             FixtureDef.shape = &Shape;
@@ -48,20 +53,29 @@ public:
 
             body(Body);
             level.add(this);
-
     }
 
     virtual void render(PlayerViewport& viewport) override {
-        sprite_.setOrigin(16.f, 16.f);
+        sprite_.setScale((float) scale_, (float) scale_);
+        sprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (scale_ * 255)));
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
         sprite_.setRotation(body()->GetAngle() * 180/b2_pi);
         viewport.window().draw(sprite_);
     }
 
     virtual void update(Level& level, double deltaT) override {
+        Utils::animateTo(scale_, 1, deltaT, 1);
     }
 
     virtual bool isCover() const override {
+        return false;
+    }
+
+    virtual bool hittable() const {
+        return false;
+    }
+
+    virtual bool transparent() const override {
         return true;
     }
 };

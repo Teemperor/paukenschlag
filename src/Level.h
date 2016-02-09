@@ -63,7 +63,7 @@ public:
         viewport_ = &viewport;
     }
 
-    void update();
+    void update(double deltaT);
 
     void add(GameObject* object) {
         objects_.push_back(object);

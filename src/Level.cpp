@@ -74,10 +74,10 @@ Level::Level() : world_(b2Vec2(0.f, 0.f)) {
     shader.setParameter("texture", sf::Shader::CurrentTexture);
 }
 
-void Level::update() {
-    world_.Step(1 / 60.f, 8, 3);
-    time_ += 1 / 60.0f;
+void Level::update(double deltaT) {
+    world_.Step(deltaT, 8, 3);
+    time_ += deltaT;
     for (GameObject* object : objects_) {
-        object->update(*this, 1 / 60.0f);
+        object->update(*this, deltaT);
     }
 }

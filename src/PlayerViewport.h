@@ -45,10 +45,7 @@ public:
 
     }
 
-    void renderUI() {
-        window_.setView(window_.getDefaultView());
-        status.draw(window_, 0, 0);
-    }
+    void renderUI();
 
     Character* player() {
         return player_;
@@ -63,9 +60,7 @@ public:
         status.update(deltaT);
     }
 
-    void apply() {
-        window_.setView(view_);
-    }
+    void apply();
 
     sf::View& view() {
         return view_;

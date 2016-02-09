@@ -17,6 +17,7 @@
 
 #include "PlayerViewport.h"
 #include "Level.h"
+#include <Character.h>
 
 void PlayerViewport::renderEffects(Level& level) {
     for (Effect& effect : effects_) {
@@ -34,4 +35,22 @@ void PlayerViewport::renderEffects(Level& level) {
 
 void PlayerViewport::addEffect(Level& level, const EffectData& data) {
     effects_.push_back(Effect(level.time(), data));
+}
+
+void PlayerViewport::renderUI() {
+    window_.setView(window_.getDefaultView());
+    status.draw(window_, 0, 0);
+    if (player_) {
+        sf::Sprite crosshair = player_->currentItem().crosshair();
+
+        auto mousePos = sf::Mouse::getPosition(window_);
+        crosshair.setPosition(mousePos.x, mousePos.y);
+        crosshair.setColor(sf::Color::Red);
+        window_.draw(crosshair);
+    }
+}
+
+void PlayerViewport::apply() {
+    view_.setCenter(player_->position().x * SCALE, player_->position().y * SCALE);
+    window_.setView(view_);
 }

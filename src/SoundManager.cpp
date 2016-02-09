@@ -15,22 +15,4 @@
  */
 
 
-#include "GuardMonitorTask.h"
-#include "WanderTask.h"
-#include "GuardAI.h"
-#include "Guard.h"
-#include "GuardCombatTask.h"
-
-void GuardMonitorTask::update(Guard& guard, Level& level, double deltaT) {
-    inCombat = false;
-    childTask(new WanderTask());
-}
-
-void GuardMonitorTask::passiveUpdate(Guard& guard, Level& level, double deltaT) {
-    if (!inCombat && !guard.ai().visiblePlayers().empty()) {
-        if (guard.ai().suspicion() >= 1) {
-            childTask(new GuardCombatTask());
-            inCombat = true;
-        }
-    }
-}
+#include "SoundManager.h"

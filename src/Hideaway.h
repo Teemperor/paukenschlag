@@ -30,6 +30,7 @@ class Hideaway : public GameObject {
 
     sf::Sprite sprite_;
     int playersInside = 0;
+    double opacity_ = 1;
 
 public:
     Hideaway(Level &level, float x, float y) : GameObject(&level) {
@@ -58,24 +59,30 @@ public:
     virtual bool hittable() const override {
         return false;
     }
+
     virtual void render(PlayerViewport &viewport) override {
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-        if (playersInside != 0) {
-            sprite_.setColor(sf::Color(255, 255, 255, 100));
-        } else {
-            sprite_.setColor(sf::Color(255, 255, 255, 255));
-        }
+        sprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * opacity_)));
         sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
         viewport.window().draw(sprite_);
     }
 
     virtual void update(Level& level, double deltaT) override {
+        if (playersInside == 0) {
+            Utils::animateTo(opacity_, 1, deltaT, 2);
+        } else {
+            Utils::animateTo(opacity_, 0.7, deltaT, 2);
+        }
     }
 
 
     virtual void startContact(GameObject* other) override;
 
     virtual void endContact(GameObject* other) override;
+
+    virtual bool transparent() const override {
+        return true;
+    }
 };
 
 #endif //SHOOTER_HIDEAWAY_H

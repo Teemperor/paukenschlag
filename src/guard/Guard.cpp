@@ -41,8 +41,8 @@ void Guard::update(Level& level, double deltaT) {
     }
 }
 
-void Guard::shoot() {
-    weapon().tryUse(level(), position(), body()->GetAngle());
+void Guard::shoot(b2Vec2 target) {
+    weapon().tryUse(level(), position(), target);
 }
 
 void Guard::initBodyAnimation() {

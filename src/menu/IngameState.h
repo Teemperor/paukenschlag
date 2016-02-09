@@ -32,12 +32,14 @@ class IngameState : public GameState {
 
     Level level;
 
-    Character* character = new Character(level, 250, 250);
+    Character* character;
 
     PlayerViewport viewport;
 
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
+
+        character = new Character(level, 350, 350);
         viewport.player(character);
 
         new Wall(level, 200, 200);
@@ -47,14 +49,14 @@ public:
             new Hideaway(level, 350 + i * 40, 350 + i * 40);
         new EscapeArea(level, 350, 150);
 
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 9; i++)
             new Guard(level, 1000 + 80 * i, 1000);
         level.setViewport(viewport);
     }
 
     virtual void update(double deltaT) override {
-        viewport.updateUI(1 / 60.0f);
-        level.update();
+        viewport.updateUI(deltaT);
+        level.update(deltaT);
     }
     virtual void draw(sf::RenderTarget& target) override {
 

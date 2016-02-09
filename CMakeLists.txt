@@ -16,7 +16,7 @@ file(GLOB_RECURSE SRC_LIST src/*.cpp )
 add_library(CORE ${SRC_LIST})
 
 # Normal executable
-add_executable(${PROJECT_NAME} main.cpp src/Level.cpp src/Level.h)
+add_executable(${PROJECT_NAME} main.cpp)
 target_link_libraries(${PROJECT_NAME} CORE)
 if(SFML_FOUND)
     include_directories(${SFML_INCLUDE_DIR})

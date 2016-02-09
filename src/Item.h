@@ -50,7 +50,12 @@ class Item {
 
     std::string name_;
 
+    std::string useSound_;
+    std::string emptySound_;
+
+    sf::Sprite crossHair_;
     sf::Sprite sprite_;
+    sf::Sprite burstSprite_;
     sf::Sprite icon_;
     double range_ = 15;
     double nextFireTime = 0;
@@ -64,6 +69,8 @@ class Item {
     double reloadTime_ = 1;
     bool hasAmmunition_ = false;
     bool automatic_ = false;
+
+    double showBurstUntil_ = 0;
 
     static std::uniform_real_distribution<double> distribution;
 
@@ -116,11 +123,17 @@ public:
     Item() {
     }
 
+    bool showBurst(double time) const {
+        return time < showBurstUntil_;
+    }
+
     bool canUse(Level &level) {
         return level.time() > nextFireTime;
     }
 
-    bool tryUse(Level& level, b2Vec2 point, float angle);
+    void reload(Level& level);
+
+    bool tryUse(Level& level, b2Vec2 point, b2Vec2 targetPoint);
 
     sf::Sprite& icon() {
         return icon_;
@@ -128,6 +141,14 @@ public:
 
     sf::Sprite& sprite() {
         return sprite_;
+    }
+
+    sf::Sprite& burstSprite() {
+        return burstSprite_;
+    }
+
+    sf::Sprite& crosshair() {
+        return crossHair_;
     }
 
     Item& icon(const std::string& path) {
@@ -168,13 +189,37 @@ public:
         return automatic_;
     }
 
+    Item& useSound(const std::string& filePath) {
+        useSound_ = filePath;
+        return *this;
+    }
+
+    Item& emptySound(const std::string& filePath) {
+        emptySound_ = filePath;
+        return *this;
+    }
+
     Item& sprite(const std::string& path, float ox, float oy) {
         sprite_ = TextureManager::instance().loadSprite(path);
         sprite_.setOrigin(ox, oy);
+        return *this;
+    }
+
+    Item& crosshair(const std::string& path) {
+        crossHair_ = TextureManager::instance().loadSprite(path);
+        crossHair_.setOrigin(crossHair_.getLocalBounds().width / 2, crossHair_.getLocalBounds().height / 2);
+        return *this;
+    }
+
+    Item& burstSprite(const std::string& path, float ox, float oy) {
+        burstSprite_ = TextureManager::instance().loadSprite(path);
+        burstSprite_.setOrigin(ox, oy);
+        return *this;
     }
 
     Item& itemClass(ItemClass itemClass) {
         class_ = itemClass;
+        return *this;
     }
 
     Item& id(ItemId id) {

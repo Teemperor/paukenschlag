@@ -27,6 +27,7 @@
 #include "LegAnimation.h"
 #include "ItemList.h"
 #include "BodyAnimation.h"
+#include "LongEffect.h"
 
 
 class Character : public GameObject {
@@ -35,7 +36,8 @@ class Character : public GameObject {
     sf::Sprite headSprite_;
 
     const float friction = 99.1f;
-    const float speed = 850.0f;
+    const float runSpeed = 850.0f;
+    const float walkSpeed = 450.0f;
 
     float controlX = 0;
     float controlY = 0;
@@ -54,6 +56,8 @@ class Character : public GameObject {
     BodyAnimation bodyAnimation_;
 
     void initBodyAnimation();
+
+    b2Vec2 aimTarget;
 
 public:
     Character(Level &level, float x, float y) : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
@@ -113,6 +117,7 @@ public:
 
     virtual void damage(const b2Vec2& hitPos) override {
         std::cout << "Player was hit" << std::endl;
+        new LongEffect(level(), hitPos.x, hitPos.y);
     }
 
 };

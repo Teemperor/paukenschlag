@@ -37,12 +37,24 @@ class GuardAI {
 
     void checkPlayerVisibility(Guard& guard, Level& level, double deltaT);
 
+    bool alarmed_ = false;
+
     std::list<Character*> visiblePlayers_;
+    b2Vec2 lastKnownPlayerPos_ = {0, 0};
+    b2Vec2 lastSound_ = {0, 0};
+
+    bool hasKnownPlayerPos() {
+        return lastKnownPlayerPos_.x != 0 && lastKnownPlayerPos_.y != 0;
+    }
+
+    bool hasLastSound() {
+        return lastSound_.x != 0 && lastSound_.y != 0;
+    }
+
+    static constexpr double fieldOfView_ = b2_pi * 0.8;
 
 public:
     GuardAI();
-
-    static constexpr double fieldOfView = b2_pi * 0.8;
 
     void update(Guard& guard, Level& level, double deltaT);
 
@@ -54,12 +66,18 @@ public:
             suspicion_ = 1;
     }
 
-    double suspicioun() const {
+    double suspicion() const {
+        if (suspicion_ > 1)
+            return 1;
         return suspicion_;
     }
 
     std::list<Character*> visiblePlayers() {
         return visiblePlayers_;
+    }
+
+    double fieldOfView() {
+        return fieldOfView_;
     }
 
 };

@@ -15,22 +15,21 @@
  */
 
 
-#include "GuardMonitorTask.h"
-#include "WanderTask.h"
-#include "GuardAI.h"
-#include "Guard.h"
-#include "GuardCombatTask.h"
+#ifndef SHOOTER_ENEMYAI_H
+#define SHOOTER_ENEMYAI_H
 
-void GuardMonitorTask::update(Guard& guard, Level& level, double deltaT) {
-    inCombat = false;
-    childTask(new WanderTask());
-}
+#include <list>
 
-void GuardMonitorTask::passiveUpdate(Guard& guard, Level& level, double deltaT) {
-    if (!inCombat && !guard.ai().visiblePlayers().empty()) {
-        if (guard.ai().suspicion() >= 1) {
-            childTask(new GuardCombatTask());
-            inCombat = true;
-        }
+class Guard;
+
+class EnemyAI {
+
+    std::list<Guard*> guards_;
+
+public:
+    EnemyAI() {
     }
-}
+    
+};
+
+#endif //SHOOTER_ENEMYAI_H

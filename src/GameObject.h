@@ -76,6 +76,10 @@ public:
     virtual void damage(const b2Vec2& hitPos) {
     }
 
+    virtual bool transparent() const {
+        return false;
+    }
+
 };
 
 

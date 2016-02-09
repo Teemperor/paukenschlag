@@ -65,6 +65,10 @@ public:
     virtual bool isCover() const override {
         return true;
     }
+
+    virtual bool transparent() const override {
+        return true;
+    }
 };
 
 

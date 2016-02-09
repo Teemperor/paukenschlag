@@ -35,15 +35,7 @@ class BodyAnimation {
     sf::Sprite rifleSprite_;
     b2Vec2 riflePos_;
 
-    void drawItem(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle, b2Vec2 itemOffset) {
-        itemOffset.x /= SCALE;
-        itemOffset.y /= SCALE;
-        b2Vec2 itemPosition = {(float32) (position.x + std::cos(angle) * itemOffset.x - std::sin(angle) * itemOffset.y),
-                               (float32) (position.y + std::sin(angle) * itemOffset.x + std::cos(angle) * itemOffset.y)};
-        currentItem.sprite().setPosition(itemPosition.x * SCALE, itemPosition.y * SCALE);
-        currentItem.sprite().setRotation((float) (angle * 180 / b2_pi));
-        viewport.window().draw(currentItem.sprite());
-    }
+    void drawItem(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle, b2Vec2 itemOffset);
 
 public:
     BodyAnimation() {

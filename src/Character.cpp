@@ -42,14 +42,18 @@ void Character::update(Level &level, double deltaT) {
             if (acceleration > 0.2f) {
                 double rotation = std::atan2(controlY, controlX);
                 walkAngle = rotation;
-                body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed * acceleration), (float32) (std::cos(rotation - M_PI / 2) * speed * acceleration)), body()->GetWorldCenter(), true);
+                body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * runSpeed * acceleration), (float32) (std::cos(rotation - M_PI / 2) *
+                                                                                                               runSpeed * acceleration)), body()->GetWorldCenter(), true);
                 body()->SetTransform(body()->GetPosition(), (float32) rotation);
             }
 
             for (unsigned j = 0; j < sf::Joystick::getButtonCount(i); j++) {
                 if (sf::Joystick::isButtonPressed(i, j)) {
                     if (j == 6) {
-                        currentItem().tryUse(level, body()->GetPosition(), body()->GetAngle());
+                        b2Vec2 target = position();
+                        target.x += std::cos(body()->GetAngle());
+                        target.y += std::sin(body()->GetAngle());
+                        currentItem().tryUse(level, body()->GetPosition(), target);
                     } else {
                         std::cout << "FOO " << j << std::endl;
                     }
@@ -62,9 +66,11 @@ void Character::update(Level &level, double deltaT) {
         }
     }
 
+
+
     if (sf::Mouse::isButtonPressed(sf::Mouse::Left)) {
         if (currentItem().isAutomatic())
-            currentItem().tryUse(level, body()->GetPosition(), body()->GetAngle());
+            currentItem().tryUse(level, body()->GetPosition(), aimTarget);
     }
 
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num1)) {
@@ -78,6 +84,10 @@ void Character::update(Level &level, double deltaT) {
     }
     if (sf::Keyboard::isKeyPressed(sf::Keyboard::Num4)) {
         selectedItem_ = 3;
+    }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::R)) {
+        currentItem().reload(level);
     }
 
     {
@@ -105,18 +115,31 @@ void Character::update(Level &level, double deltaT) {
         if (keyPressed) {
             double rotation = std::atan2(controlY, controlX);
             walkAngle = rotation;
-            body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed), (float32) (std::cos(rotation - M_PI / 2) * speed)), body()->GetWorldCenter(), true);
+
+            double speed = runSpeed;
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                speed = walkSpeed;
+
+            body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed),
+                                      (float32) (std::cos(rotation - M_PI / 2) * speed)), body()->GetWorldCenter(), true);
+
             // TODO was replaced my mouse, delete this? body()->SetTransform(body()->GetPosition(), (float32) rotation);
+
         }
-        if (controlX != 0 || controlY != 0)
-            legAnimation_.state(LegAnimation::State::Running);
+        if (controlX != 0 || controlY != 0) {
+
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
+                legAnimation_.state(LegAnimation::State::Walking);
+            else
+                legAnimation_.state(LegAnimation::State::Running);
+        }
         else
             legAnimation_.state(LegAnimation::State::Standing);
     }
 }
 
 void Character::pulledTrigger() {
-    currentItem().tryUse(level(), body()->GetPosition(), body()->GetAngle());
+    currentItem().tryUse(level(), body()->GetPosition(), aimTarget);
 }
 
 void Character::initBodyAnimation() {
@@ -146,9 +169,11 @@ void Character::render(PlayerViewport &viewport) {
     headSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
     viewport.window().draw(headSprite_);
 
-    viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
+    //viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
 
     auto mousePos = sf::Mouse::getPosition(viewport.window());
     auto internalPos = viewport.window().mapPixelToCoords(mousePos);
+    aimTarget.x = internalPos.x / SCALE;
+    aimTarget.y = internalPos.y / SCALE;
     body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
 }

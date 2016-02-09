@@ -26,7 +26,7 @@ void LegAnimation::render(const b2Vec2& pos, double rotation, PlayerViewport &vi
             legStretchFactor = 0;
             break;
         case State::Walking:
-            legStretchFactor = std::cos(viewport.level().time() * 2);
+            legStretchFactor = std::cos(viewport.level().time() * 4);
             break;
         case State::Running:
             legStretchFactor = std::cos(viewport.level().time() * 12);

@@ -17,20 +17,19 @@ int main()
     ItemList::instance();
 
     sf::RenderWindow window(sf::VideoMode(1700, 900, 32), "Test");
-    window.setFramerateLimit(60);
-    window.setVerticalSyncEnabled(true);
+    //window.setFramerateLimit(120);
+    //window.setVerticalSyncEnabled(true);
+    window.setMouseCursorVisible(false);
 
     GameState* currentState = new IngameState(window);
 
+
+    double seconds = 0;
+    unsigned updates = 0;
+
+    sf::Clock clock;
     while (window.isOpen())
     {
-
-        window.clear(sf::Color::Black);
-
-        currentState->update(1 / 60.0);
-        currentState->draw(window);
-
-        window.display();
 
         sf::Event event;
         while (window.pollEvent(event))
@@ -48,6 +47,23 @@ int main()
 
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
             break;
+        }
+
+        window.clear(sf::Color::Black);
+
+        double deltaT = clock.restart().asSeconds();
+        seconds += deltaT;
+
+        currentState->update(deltaT);
+        currentState->draw(window);
+
+        window.display();
+
+        updates++;
+        if (seconds > 1) {
+            std::cout << "FPS " << (updates / seconds) << std::endl;
+            seconds = 0;
+            updates = 0;
         }
     }
 

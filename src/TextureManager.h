@@ -25,7 +25,13 @@ class TextureManager {
 
     std::unordered_map<std::string, sf::Texture*> texturesByPath_;
 
+    virtual ~TextureManager() {
+        for (auto& pair : texturesByPath_) {
+            delete pair.second;
+        }
+    }
 public:
+
     static TextureManager& instance() {
         static TextureManager instance_;
         return instance_;

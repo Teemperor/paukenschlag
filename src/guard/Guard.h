@@ -20,6 +20,7 @@
 
 #include <iostream>
 #include <LegAnimation.h>
+#include <LongEffect.h>
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Level.h"
@@ -106,8 +107,7 @@ public:
             deadSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
             viewport.window().draw(deadSprite_);
         } else {
-
-            fovIndicator.render(viewport, position(), getViewDirection(), GuardAI::fieldOfView);
+            fovIndicator.render(viewport, position(), getViewDirection(), ai_.fieldOfView(), ai_.suspicion());
 
             legAnimation.render(position(), body()->GetAngle(), viewport);
 
@@ -117,7 +117,7 @@ public:
             headSprite_.setRotation((body()->GetAngle() + headRotation) * 180 / b2_pi);
             viewport.window().draw(headSprite_);
 
-            suspicionIndicator_.draw(viewport, SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y - 40, ai_.suspicioun());
+            //suspicionIndicator_.draw(viewport, SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y - 40, ai_.suspicion());
         }
     }
 
@@ -157,14 +157,18 @@ public:
         headRotationTarget = newTargetRotation;
     }
 
-    void shoot();
+    void shoot(b2Vec2 target);
 
     virtual void damage(const b2Vec2& hitPos) override {
+        if (!dead_)
+            new LongEffect(level(), hitPos.x, hitPos.y);
+
         dead_ = true;
         b2Filter filter;
         filter.groupIndex = 0;
         filter.maskBits = 0;
         body()->GetFixtureList()->SetFilterData(filter);
+
     }
 
     float getViewDirection() {
@@ -177,6 +181,14 @@ public:
 
     bool dead() const {
         return dead_;
+    }
+
+    virtual bool hittable() const override {
+        return !dead_;
+    }
+
+    virtual bool transparent() const override {
+        return true;
     }
 };
 

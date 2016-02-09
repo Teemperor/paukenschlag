@@ -17,22 +17,26 @@
 
 #include "Item.h"
 #include "ItemList.h"
+#include "SoundManager.h"
 #include <string>
 #include <fstream>
 
 std::uniform_real_distribution<double> Item::distribution(0, 100.0);
 
-bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
+bool Item::tryUse(Level& level, b2Vec2 point, b2Vec2 targetPoint) {
+
+    double angle = std::atan2(targetPoint.y - point.y, targetPoint.x - point.x);
 
     if (canUse(level)) {
         if (hasAmmunition_) {
             if (bulletsInMag_ > 0) {
                 bulletsInMag_--;
             } else if (bullets_ > 0) {
-                fillMagazine();
-                nextFireTime = level.time() + reloadTime_;
+                reload(level);
                 return false;
             } else {
+                nextFireTime = level.time() + 1;
+                SoundManager::instance().playSound(emptySound_);
                 return false;
             }
         }
@@ -57,30 +61,36 @@ bool Item::tryUse(Level& level, b2Vec2 point, float angle) {
 
         angle += d(Utils::rndGen);
 
+        double targetRange = Utils::length(targetPoint - point);
+
+        if (targetRange > range_)
+            targetRange = range_;
+
+        targetPoint = {(float32) (point.x + std::cos(angle) * targetRange),
+                       (float32) (point.y + std::sin(angle) * targetRange)};
+
         nextFireTime = level.time() + fireInterval_;
-
-        b2Vec2 p2((float32) (cos(angle) * range_), (float32) (sin(angle) * range_));
-
-        p2 += point;
+        showBurstUntil_ = level.time() + 0.05;
 
         Raycaster raycaster;
         raycaster.start = point;
         raycaster.weapon = this;
 
-        level.world().RayCast(&raycaster, point, p2);
+        level.world().RayCast(&raycaster, point, targetPoint);
 
         if (raycaster.target) {
             GameObject* targetObject = (GameObject*) raycaster.target->GetUserData();
 
             targetObject->damage(raycaster.point);
 
-            b2Vec2 impactImpulse(cos(angle) * 2, sin(angle) * 2);
+            b2Vec2 impactImpulse(std::cos(angle) * 2, std::sin(angle) * 2);
 
             raycaster.target->GetBody()->ApplyLinearImpulse(impactImpulse, point, true);
         } else {
             if (class_ != ItemClass::Knife)
-                createDust(level, p2, angle);
+                createDust(level, targetPoint, angle);
         }
+        SoundManager::instance().playSound(useSound_);
 
         return false;
     }
@@ -96,4 +106,9 @@ void Item::createDust(Level& level, b2Vec2 point, float angle) {
                                EffectData("data/effects/dust.png", distribution(Utils::rndGen))
                                        .position({point.x + distributionPoint(Utils::rndGen), point.y + distributionPoint(Utils::rndGen)})
                                .duration(1).fadesOut(true).scalesIn(true));
+}
+
+void Item::reload(Level& level) {
+    fillMagazine();
+    nextFireTime = level.time() + reloadTime_;
 }
