@@ -20,6 +20,7 @@
 
 
 #include <Box2D/Common/b2Math.h>
+#include <ai/AStarPath.h>
 #include "GuardTask.h"
 
 class WalkToTask : public GuardTask {
@@ -29,6 +30,8 @@ class WalkToTask : public GuardTask {
     double stuckCheckInterval = 1;
     double lastStuckCheck = 0;
     double goalDistance = 0.3;
+
+    AStarPath* path = nullptr;
 
 public:
     WalkToTask(const b2Vec2& target, double goalDistance = 0.3);

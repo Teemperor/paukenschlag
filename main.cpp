@@ -11,6 +11,8 @@
 #include <Cover.h>
 #include <ItemList.h>
 #include <menu/IngameState.h>
+#include <chrono>
+#include <ai/AStarPath.h>
 
 int main()
 {
@@ -58,6 +60,8 @@ int main()
         currentState->draw(window);
 
         window.display();
+
+        AStarPath::processGlobal(std::chrono::steady_clock::now() + std::chrono::milliseconds(4));
 
         updates++;
         if (seconds > 1) {

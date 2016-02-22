@@ -42,16 +42,24 @@ public:
         character = new Character(level, 350, 350);
         viewport.player(character);
 
-        new Wall(level, 200, 200);
+
+        for (int i = 0; i < 10; i++) {
+            int x = Utils::rndGen() % 2000;
+            int y = Utils::rndGen() % 2000;
+            new Wall(level, x, y);
+        }
+
         new Cover(level, 300, 600);
+
         new Crate(level, 100, 100);
         for (int i = 0; i < 17; i++)
             new Hideaway(level, 350 + i * 40, 350 + i * 40);
         new EscapeArea(level, 350, 150);
 
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 10; i++)
             new Guard(level, 1000 + 80 * i, 1000);
         level.setViewport(viewport);
+        level.updateNavGrid();
     }
 
     virtual void update(double deltaT) override {
@@ -60,12 +68,10 @@ public:
     }
 
     virtual void draw(sf::RenderTarget& target) override {
-
         viewport.apply();
         level.render(viewport);
         viewport.renderEffects(level);
         viewport.renderUI();
-
     }
 
     virtual void handleEvent(sf::Event& event) override {

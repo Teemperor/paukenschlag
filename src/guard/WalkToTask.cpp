@@ -19,23 +19,37 @@
 #include "Guard.h"
 
 void WalkToTask::update(Guard& guard, Level& level, double deltaT) {
-    guard.rotateTo(target_);
-
-    double distance = Utils::distance(guard.position(), target_);
-
-    if (distance > goalDistance) {
-        guard.walkForward();
-    } else {
-        guard.stopWalking();
-        finish();
+    if (path == nullptr) {
+        b2Vec2 start = guard.position();
+        path = level.navGrid().searchPath(start, target_);
     }
 
-    if (lastStuckCheck > level.time() + stuckCheckInterval) {
-        lastStuckCheck = level.time();
-        if (lastDistanceToTarget <= distance) {
+    if (path->finished()) {
+        if (path->positions.empty()) {
             finish();
+            return;
         }
-        lastDistanceToTarget = distance;
+
+        b2Vec2 nextTarget = path->positions.front().node_->pos;
+
+        guard.rotateTo(nextTarget);
+
+        double distance = Utils::distance(guard.position(), nextTarget);
+
+        if (distance > goalDistance) {
+            guard.walkForward();
+        } else {
+            guard.stopWalking();
+            path->positions.pop_front();
+        }
+
+        if (lastStuckCheck > level.time() + stuckCheckInterval) {
+            lastStuckCheck = level.time();
+            if (lastDistanceToTarget <= distance) {
+                finish();
+            }
+            lastDistanceToTarget = distance;
+        }
     }
 }
 

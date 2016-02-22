@@ -50,6 +50,10 @@ public:
         level.add(this);
     }
 
+    virtual bool isObstacle() const override {
+        return true;
+    }
+
     virtual void render(PlayerViewport& viewport) override {
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
         sprite_.setRotation(body()->GetAngle() * 180/b2_pi);

@@ -49,6 +49,10 @@ public:
         level.add(this);
     }
 
+    virtual bool isObstacle() const override {
+        return true;
+    }
+
     virtual void render(PlayerViewport& viewport) override {
         sprite_.setOrigin(107/2, 40/2);
         sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);

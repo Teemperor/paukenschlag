@@ -15,30 +15,24 @@
  */
 
 
-#ifndef SHOOTER_WALKGRID_H
-#define SHOOTER_WALKGRID_H
+#ifndef SHOOTER_WALKLINECHECKER_H
+#define SHOOTER_WALKLINECHECKER_H
 
-#include <cstdint>
-#include <vector>
-#include <Box2D/Dynamics/b2Body.h>
-#include <Constants.h>
-#include <Box2D/Collision/Shapes/b2PolygonShape.h>
-#include <Box2D/Dynamics/b2Fixture.h>
-#include <GameObject.h>
+
+#include <Box2D/Dynamics/b2WorldCallbacks.h>
 
 class Level;
 
-class WalkGrid {
+class WalkLineChecker : public b2RayCastCallback {
 
-    std::vector<uint8_t> canWalk_;
-    Level* level_;
-
-    bool isFree(float x, float y, float w, float h);
+    bool lineIsFree_ = true;
 
 public:
-    WalkGrid(Level* level);
+    static bool isFree(Level& level, b2Vec2& start, b2Vec2& end);
 
+    virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
+                                  const b2Vec2& normal, float32 fraction);
 };
 
 
-#endif //SHOOTER_WALKGRID_H
+#endif //SHOOTER_WALKLINECHECKER_H

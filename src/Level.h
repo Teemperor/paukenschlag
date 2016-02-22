@@ -21,6 +21,7 @@
 #include <Box2D/Box2D.h>
 #include <list>
 #include <iostream>
+#include <ai/NavGrid.h>
 #include "GameObject.h"
 class Character;
 
@@ -39,9 +40,10 @@ class Level : b2ContactListener {
     sf::Shader shader;
     sf::RenderTexture alphaTexture;
 
+    NavGrid navGrid_;
+
 public:
     Level();
-
 
     virtual void BeginContact(b2Contact* contact) override {
         GameObject* objectA = (GameObject*) contact->GetFixtureA()->GetUserData();
@@ -55,6 +57,14 @@ public:
         GameObject* objectB = (GameObject*) contact->GetFixtureB()->GetUserData();
         objectA->endContact(objectB);
         objectB->endContact(objectA);
+    }
+
+    void updateNavGrid() {
+        navGrid_.setLevel(this);
+    }
+
+    NavGrid& navGrid() {
+        return navGrid_;
     }
 
     void render(PlayerViewport& viewport);

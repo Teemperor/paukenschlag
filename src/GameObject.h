@@ -53,6 +53,10 @@ public:
 
     }
 
+    virtual bool isObstacle() const {
+        return false;
+    }
+
     virtual bool hittable() const {
         return true;
     }
