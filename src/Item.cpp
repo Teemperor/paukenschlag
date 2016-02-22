@@ -36,7 +36,7 @@ bool Item::tryUse(Level& level, b2Vec2 point, b2Vec2 targetPoint) {
                 return false;
             } else {
                 nextFireTime = level.time() + 1;
-                SoundManager::instance().playSound(emptySound_);
+                SoundManager::instance().playSound(emptySound_, point);
                 return false;
             }
         }
@@ -90,7 +90,7 @@ bool Item::tryUse(Level& level, b2Vec2 point, b2Vec2 targetPoint) {
             if (class_ != ItemClass::Knife)
                 createDust(level, targetPoint, angle);
         }
-        SoundManager::instance().playSound(useSound_);
+        SoundManager::instance().playSound(useSound_, point);
 
         return false;
     }

@@ -58,6 +58,7 @@ public:
         viewport.updateUI(deltaT);
         level.update(deltaT);
     }
+
     virtual void draw(sf::RenderTarget& target) override {
 
         viewport.apply();
@@ -66,6 +67,7 @@ public:
         viewport.renderUI();
 
     }
+
     virtual void handleEvent(sf::Event& event) override {
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
             viewport.player()->pulledTrigger();

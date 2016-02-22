@@ -19,6 +19,10 @@
 #define SHOOTER_SOUNDMANAGER_H
 #include <unordered_map>
 #include <SFML/Audio.hpp>
+#include <Box2D/Common/b2Math.h>
+#include "PlayerViewport.h"
+
+class PlayerViewport;
 
 class SoundManager {
 
@@ -59,21 +63,25 @@ class SoundManager {
         return *soundBuffer;
     }
 
+    std::set<PlayerViewport*> viewports_;
+
+    PlayerViewport * getClosestViewport(b2Vec2 pos);
+
 public:
     static SoundManager& instance() {
         static SoundManager instance_;
         return instance_;
     }
 
-    void playSound(const std::string& path) {
-        if (path.empty())
-            return;
-
-        sf::SoundBuffer& buffer = getSoundBuffer(path);
-        sf::Sound& sound = getSoundCache();
-        sound.setBuffer(buffer);
-        sound.play();
+    void addViewport(PlayerViewport* viewport) {
+        viewports_.insert(viewport);
     }
+
+    void removeViewport(PlayerViewport* viewport) {
+        viewports_.erase(viewport);
+    }
+
+    void playSound(const std::string& path, b2Vec2 pos);
 };
 
 

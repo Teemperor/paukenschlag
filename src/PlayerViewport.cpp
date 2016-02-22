@@ -17,6 +17,7 @@
 
 #include "PlayerViewport.h"
 #include "Level.h"
+#include "SoundManager.h"
 #include <Character.h>
 
 void PlayerViewport::renderEffects(Level& level) {
@@ -53,4 +54,15 @@ void PlayerViewport::renderUI() {
 void PlayerViewport::apply() {
     view_.setCenter(player_->position().x * SCALE, player_->position().y * SCALE);
     window_.setView(view_);
+}
+
+PlayerViewport::PlayerViewport(Level* level, sf::RenderWindow& window) : window_(window),
+                                                                         view_(sf::Vector2f(window_.getSize().x / 2, window_.getSize().y / 2),
+                                                                               sf::Vector2f(window_.getSize().x, window_.getSize().y)),
+                                                                         level_(level) {
+    SoundManager::instance().addViewport(this);
+}
+
+PlayerViewport::~PlayerViewport() {
+    SoundManager::instance().removeViewport(this);
 }

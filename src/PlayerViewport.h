@@ -37,13 +37,9 @@ class PlayerViewport {
     PlayerStatus status;
 
 public:
-    PlayerViewport(Level* level, sf::RenderWindow& window) : window_(window),
-                                               view_(sf::Vector2f(window_.getSize().x / 2, window_.getSize().y / 2),
-                                                     sf::Vector2f(window_.getSize().x, window_.getSize().y)),
-                                               level_(level)
-    {
+    PlayerViewport(Level* level, sf::RenderWindow& window);
 
-    }
+    virtual ~PlayerViewport();
 
     void renderUI();
 
@@ -77,6 +73,10 @@ public:
     void renderEffects(Level& level);
 
     void addEffect(Level& level, const EffectData& data);
+
+    b2Vec2 centerPos() {
+        return {view_.getCenter().x / SCALE, view_.getCenter().y / SCALE};
+    }
 
 };
 

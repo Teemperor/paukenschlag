@@ -16,3 +16,43 @@
 
 
 #include "SoundManager.h"
+#include "Utils.h"
+
+void SoundManager::playSound(const std::string& path, b2Vec2 pos) {
+    if (path.empty())
+        return;
+
+    const double maxHearDistance = 50;
+
+    PlayerViewport* viewport = getClosestViewport(pos);
+
+    double distance = Utils::distance(viewport->centerPos(), pos);
+    if (distance > maxHearDistance)
+        distance = maxHearDistance;
+
+
+    double volume = (maxHearDistance - distance) / maxHearDistance;
+    volume = std::min(volume, 1.0);
+
+    sf::SoundBuffer& buffer = getSoundBuffer(path);
+    sf::Sound& sound = getSoundCache();
+    sound.setVolume((float) (volume * 100.0f));
+
+    // TODO remove
+    sound.setVolume(0);
+
+    sound.setBuffer(buffer);
+    sound.play();
+}
+
+PlayerViewport *SoundManager::getClosestViewport(b2Vec2 pos) {
+    PlayerViewport* result = nullptr;
+    for (PlayerViewport* viewport : viewports_) {
+        if (result == nullptr)
+            result = viewport;
+        else if (Utils::distance(viewport->centerPos(), pos) < Utils::distance(result->centerPos(), pos)) {
+            result = viewport;
+        }
+    }
+    return result;
+}
