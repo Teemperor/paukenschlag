@@ -29,7 +29,6 @@ class LOSChecker : public b2RayCastCallback {
 
     b2Vec2 start;
     b2Body* target;
-    double totalDistance;
     double targetDistance = 0;
     double closestDistance = std::numeric_limits<double>::max();
 

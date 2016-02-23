@@ -32,14 +32,13 @@ float32 LOSChecker::ReportFixture(b2Fixture* fixture, const b2Vec2& point,
         }
     }
 
-    return (float32) (d / totalDistance);
+    return 1;
 }
 
 bool LOSChecker::canSee(Level&level, const b2Vec2& start, b2Body* body) {
     LOSChecker checker;
     checker.target = body;
     checker.start = start;
-    checker.totalDistance = Utils::distance(start, body->GetPosition());
     level.world().RayCast(&checker, start, body->GetPosition());
     return checker.seesTarget();
 }
