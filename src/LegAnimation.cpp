@@ -18,7 +18,7 @@
 #include "LegAnimation.h"
 #include <Level.h>
 
-void LegAnimation::render(const b2Vec2& pos, double rotation, PlayerViewport &viewport) {
+void LegAnimation::render(const b2Vec2& pos, double rotation, PlayerViewport &viewport, double alpha) {
 
     double legStretchFactor;
     switch(state_) {
@@ -36,10 +36,9 @@ void LegAnimation::render(const b2Vec2& pos, double rotation, PlayerViewport &vi
     }
 
     sprite_.setScale((float) legStretchFactor * 1.4f, 1);
-
-
     sprite_.setPosition(SCALE * pos.x, SCALE * pos.y);
     sprite_.setRotation((float) (rotation * 180 / b2_pi));
+    sprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha)));
     viewport.window().draw(sprite_);
 
 }

@@ -59,6 +59,10 @@ class Guard : public GameObject {
 
     FOVIndicator fovIndicator;
 
+    bool visible_ = false;
+
+    double alpha_ = 0;
+
     void initBodyAnimation();
 
 public:
@@ -109,14 +113,15 @@ public:
             deadSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
             viewport.window().draw(deadSprite_);
         } else {
-            fovIndicator.render(viewport, position(), getViewDirection(), ai_.fieldOfView(), ai_.suspicion());
+            fovIndicator.render(viewport, position(), getViewDirection(), ai_.fieldOfView(), ai_.suspicion(), alpha_);
 
-            legAnimation.render(position(), body()->GetAngle(), viewport);
+            legAnimation.render(position(), body()->GetAngle(), viewport, alpha_);
 
-            bodyAnimation_.draw(weapon_, viewport, position(), body()->GetAngle());
+            bodyAnimation_.draw(weapon_, viewport, position(), body()->GetAngle(), alpha_);
 
             headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
             headSprite_.setRotation((body()->GetAngle() + headRotation) * 180 / b2_pi);
+            headSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha_)));
             viewport.window().draw(headSprite_);
 
             //suspicionIndicator_.draw(viewport, SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y - 40, ai_.suspicion());

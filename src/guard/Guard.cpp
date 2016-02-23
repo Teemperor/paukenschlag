@@ -21,6 +21,9 @@
 
 
 void Guard::update(Level& level, double deltaT) {
+
+    Utils::animateTo(alpha_, visible_ ? 1 : 0, deltaT, 3);
+
     if (!dead_) {
         suspicionIndicator_.update(level, deltaT);
 

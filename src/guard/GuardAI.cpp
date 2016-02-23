@@ -18,6 +18,7 @@
 #include "GuardAI.h"
 #include <Level.h>
 #include <Character.h>
+#include <LOSChecker.h>
 #include "Guard.h"
 #include "GuardMonitorTask.h"
 #include "WanderTask.h"
@@ -25,34 +26,6 @@
 
 static std::default_random_engine generator;
 static std::uniform_real_distribution<float> headRotationDistribution(-0.7f, 0.7f);
-
-class LOSRaycaster : public b2RayCastCallback {
-public:
-    b2Vec2 start;
-    b2Fixture* target;
-    double targetDistance = 0;
-    double closestDistance = std::numeric_limits<double>::max();
-
-    virtual float32 ReportFixture(b2Fixture* fixture, const b2Vec2& point,
-                                  const b2Vec2& normal, float32 fraction) override {
-        GameObject* object = static_cast<GameObject*>(fixture->GetUserData());
-
-        if (fixture == target) {
-            targetDistance = Utils::distance(start, point);
-        } else if (!object->transparent()){
-            double d = Utils::distance(start, point);
-            if (d < closestDistance) {
-                closestDistance = d;
-            }
-        }
-
-        return -1;
-    }
-
-    bool seesTarget() {
-        return closestDistance > targetDistance;
-    }
-};
 
 void GuardAI::update(Guard& guard, Level& level, double deltaT) {
 
@@ -75,7 +48,14 @@ void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
 
     modSuspicion(-deltaT / 3.0f);
 
+    guard.visible_ = false;
+
     for (Character* player : level.players()) {
+        bool hasLOS = LOSChecker::canSee(level, guard.body()->GetPosition(), player->body());
+
+        if (hasLOS)
+            guard.visible_ = true;
+
         if (player->hidden()) {
             continue;
         }
@@ -89,13 +69,9 @@ void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
             continue;
         }
 
-        LOSRaycaster raycaster;
-        raycaster.start = guard.body()->GetPosition();
-        raycaster.target = player->body()->GetFixtureList();
 
-        level.world().RayCast(&raycaster, guard.body()->GetPosition(), player->body()->GetPosition());
 
-        if (raycaster.seesTarget()) {
+        if (hasLOS) {
             visiblePlayers_.push_back(player);
             modSuspicion(deltaT / 1.0f);
         }

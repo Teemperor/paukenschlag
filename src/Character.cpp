@@ -31,6 +31,8 @@ void Character::endContact(GameObject* other) {
 }
 
 void Character::update(Level &level, double deltaT) {
+    Utils::animateTo(alpha_, hidden() ? 0.55 : 1, deltaT, 3);
+
     for (unsigned i = 0; i < 8; i++) {
         if (sf::Joystick::isConnected(i)) {
             controlX = sf::Joystick::getAxisPosition(i, sf::Joystick::Axis::X) / 100;
@@ -161,12 +163,13 @@ void Character::initBodyAnimation() {
 }
 
 void Character::render(PlayerViewport &viewport) {
-    legAnimation_.render(position(), walkAngle, viewport);
+    legAnimation_.render(position(), walkAngle, viewport, alpha_);
 
-    bodyAnimation_.draw(currentItem(), viewport, position(), body()->GetAngle());
+    bodyAnimation_.draw(currentItem(), viewport, position(), body()->GetAngle(), alpha_);
 
     headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
     headSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
+    headSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (alpha_ * 255)));
     viewport.window().draw(headSprite_);
 
     //viewport.view().setCenter(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);

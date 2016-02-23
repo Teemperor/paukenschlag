@@ -46,7 +46,7 @@ public:
         state_ = state;
     }
 
-    void render(const b2Vec2& pos, double rotation, PlayerViewport &viewport);
+    void render(const b2Vec2& pos, double rotation, PlayerViewport &viewport, double alpha);
 };
 
 

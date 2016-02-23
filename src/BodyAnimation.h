@@ -35,7 +35,7 @@ class BodyAnimation {
     sf::Sprite rifleSprite_;
     b2Vec2 riflePos_;
 
-    void drawItem(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle, b2Vec2 itemOffset);
+    void drawItem(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle, b2Vec2 itemOffset, double alpha);
 
 public:
     BodyAnimation() {
@@ -60,31 +60,35 @@ public:
         riflePos_ = pos;
     }
 
-    void draw(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle) {
+    void draw(Item& currentItem, PlayerViewport &viewport, const b2Vec2& position, double angle, double alpha = 1) {
         float angleInDegrees = (float) (angle * 180 / b2_pi);
         switch(currentItem.itemClass()) {
             case ItemClass::None:
                 idleSprite_.setPosition(position.x * SCALE, position.y * SCALE);
                 idleSprite_.setRotation(angleInDegrees);
+                idleSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha)));
                 viewport.window().draw(idleSprite_);
                 break;
             case ItemClass::Knife:
                 knifeSprite_.setPosition(position.x * SCALE, position.y * SCALE);
                 knifeSprite_.setRotation(angleInDegrees);
+                knifeSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha)));
                 viewport.window().draw(knifeSprite_);
-                drawItem(currentItem, viewport, position, angle, knifePos_);
+                drawItem(currentItem, viewport, position, angle, knifePos_, alpha);
                 break;
             case ItemClass::Pistol:
                 pistolSprite_.setPosition(position.x * SCALE, position.y * SCALE);
                 pistolSprite_.setRotation(angleInDegrees);
+                pistolSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha)));
                 viewport.window().draw(pistolSprite_);
-                drawItem(currentItem, viewport, position, angle, pistolPos_);
+                drawItem(currentItem, viewport, position, angle, pistolPos_, alpha);
                 break;
             case ItemClass::Rifle:
                 rifleSprite_.setPosition(position.x * SCALE, position.y * SCALE);
                 rifleSprite_.setRotation(angleInDegrees);
+                rifleSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha)));
                 viewport.window().draw(rifleSprite_);
-                drawItem(currentItem, viewport, position, angle, riflePos_);
+                drawItem(currentItem, viewport, position, angle, riflePos_, alpha);
                 break;
             default:
                 assert(false);

@@ -59,6 +59,8 @@ class Character : public GameObject {
 
     b2Vec2 aimTarget;
 
+    double alpha_ = 1;
+
 public:
     Character(Level &level, float x, float y) : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");

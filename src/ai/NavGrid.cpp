@@ -1,6 +1,5 @@
 
 #include "NavGrid.h"
-#include "SensorRectangle.h"
 #include "AStarPath.h"
 #include <Level.h>
 

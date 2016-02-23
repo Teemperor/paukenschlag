@@ -32,8 +32,8 @@ public:
         fovLimit_.setOrigin(0, fovLimit_.getLocalBounds().height);
     }
 
-    void render(PlayerViewport& viewport, const b2Vec2& pos, double direction, double angle, double suspicioun) {
-        sf::Color color((sf::Uint8) (suspicioun * 255), (sf::Uint8) ((1 - suspicioun) * 255), 0);
+    void render(PlayerViewport& viewport, const b2Vec2& pos, double direction, double angle, double suspicioun, double alpha) {
+        sf::Color color((sf::Uint8) (suspicioun * 255), (sf::Uint8) ((1 - suspicioun) * 255), 0, (sf::Uint8) (alpha * 255));
 
         fovLimit_.setColor(color);
 
