@@ -39,16 +39,37 @@ void PlayerViewport::addEffect(Level& level, const EffectData& data) {
 }
 
 void PlayerViewport::renderUI() {
-    window_.setView(window_.getDefaultView());
-    status.draw(window_, 0, 0);
+    apply();
     if (player_) {
+        auto mousePos = sf::Mouse::getPosition(window_);
+        b2Vec2 mousePosFromCenter = {mousePos.x - view_.getSize().x / 2, mousePos.y - view_.getSize().y / 2};
+
+        b2Vec2 ingameMousePos = {player_->position().x + mousePosFromCenter.x / SCALE,
+                                 player_->position().y + mousePosFromCenter.y / SCALE};
+
         sf::Sprite crosshair = player_->currentItem().crosshair();
 
-        auto mousePos = sf::Mouse::getPosition(window_);
-        crosshair.setPosition(mousePos.x, mousePos.y);
+        Item::Raycaster raycaster;
+        raycaster.start = player_->position();
+
+        player_->level().world().RayCast(&raycaster, raycaster.start, ingameMousePos);
+
+        if (raycaster.target) {
+            crosshair.setPosition(raycaster.point.x * SCALE, raycaster.point.y * SCALE);
+        } else {
+            crosshair.setPosition(ingameMousePos.x * SCALE, ingameMousePos.y * SCALE);
+        }
         crosshair.setColor(sf::Color::Red);
         window_.draw(crosshair);
+
+        if (raycaster.target) {
+            crosshair.setPosition(ingameMousePos.x * SCALE, ingameMousePos.y * SCALE);
+            crosshair.setColor(sf::Color(222, 222, 222, 255));
+            window_.draw(crosshair);
+        }
     }
+    window_.setView(window_.getDefaultView());
+    status.draw(window_, 0, 0);
 }
 
 void PlayerViewport::apply() {

@@ -38,7 +38,7 @@ public:
         b2Body* Body = level.world().CreateBody(&BodyDef);
 
         b2PolygonShape Shape;
-        Shape.SetAsBox((107.f/2)/SCALE, (40.f/2)/SCALE);
+        Shape.SetAsBox((107.f / 2) / SCALE, (40.f / 2) / SCALE);
         b2FixtureDef FixtureDef;
         FixtureDef.density = 0.f;
         FixtureDef.shape = &Shape;
@@ -50,6 +50,10 @@ public:
     }
 
     virtual bool isObstacle() const override {
+        return true;
+    }
+
+    virtual bool transparent() const override {
         return true;
     }
 

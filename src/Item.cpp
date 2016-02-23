@@ -74,7 +74,7 @@ bool Item::tryUse(Level& level, b2Vec2 point, b2Vec2 targetPoint) {
 
         Raycaster raycaster;
         raycaster.start = point;
-        raycaster.weapon = this;
+        raycaster.passCoverChance_ = passCoverChance_;
 
         level.world().RayCast(&raycaster, point, targetPoint);
 

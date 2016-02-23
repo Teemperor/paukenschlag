@@ -74,9 +74,22 @@ class Item {
 
     static std::uniform_real_distribution<double> distribution;
 
+
+    void createDust(Level& level, b2Vec2 point, float angle);
+
+    void fillMagazine() {
+        while (bullets_ > 0 && bulletsInMag_ < magSize_) {
+            bullets_--;
+            bulletsInMag_++;
+        }
+    }
+public:
+    Item() {
+    }
+
     class Raycaster : public b2RayCastCallback {
     public:
-        Item * weapon;
+        double passCoverChance_ = 0;
 
         b2Vec2 start;
 
@@ -96,7 +109,7 @@ class Item {
                 if (object->isCover()) {
                     if (dist < 2)
                         return -1;
-                    else if (distribution(Utils::rndGen) < weapon->passCoverChance_)
+                    else if (distribution(Utils::rndGen) < passCoverChance_)
                         return -1;
                 }
                 if (dist < closestDistance) {
@@ -107,21 +120,10 @@ class Item {
                 }
             }
 
-            return -1;
+            return 1;
         }
     };
 
-    void createDust(Level& level, b2Vec2 point, float angle);
-
-    void fillMagazine() {
-        while (bullets_ > 0 && bulletsInMag_ < magSize_) {
-            bullets_--;
-            bulletsInMag_++;
-        }
-    }
-public:
-    Item() {
-    }
 
     bool showBurst(double time) const {
         return time < showBurstUntil_;
