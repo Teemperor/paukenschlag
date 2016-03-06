@@ -39,7 +39,7 @@ class IngameState : public GameState {
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
 
-        character = new Character(level, 350, 350);
+        character = new Character(level, 950, 950);
         viewport.player(character);
 
 
@@ -57,7 +57,7 @@ public:
         new EscapeArea(level, 350, 150);
 
         for (int i = 0; i < 10; i++)
-            new Guard(level, 1000 + 80 * i, 1000);
+            new Guard(level, 1080 + 80 * i, 1000);
         level.setViewport(viewport);
         level.updateNavGrid();
     }

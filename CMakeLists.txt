@@ -13,6 +13,9 @@ include_directories(${SFML_INCLUDE_DIR})
 
 find_package(Threads)
 
+# External data
+include_directories(extern/)
+
 # Normal sources
 include_directories(src/)
 file(GLOB_RECURSE SRC_LIST src/*.cpp )

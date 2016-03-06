@@ -73,7 +73,18 @@ void PlayerViewport::renderUI() {
 }
 
 void PlayerViewport::apply() {
-    view_.setCenter(player_->position().x * SCALE, player_->position().y * SCALE);
+    float newCenterX = player_->position().x * SCALE;
+    float newCenterY = player_->position().y * SCALE;
+
+    /*if (newCenterX - view_.getSize().x / 2 < 0) {
+        newCenterX = view_.getSize().x / 2;
+    }
+
+    if (newCenterY - view_.getSize().y / 2 < 0) {
+        newCenterY = view_.getSize().y / 2;
+    }*/
+
+    view_.setCenter(newCenterX, newCenterY);
     window_.setView(view_);
 }
 

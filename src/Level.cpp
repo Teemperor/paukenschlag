@@ -43,6 +43,12 @@ void Level::render(PlayerViewport& viewport) {
     int x2 = ((int) (viewport.view().getCenter().x + viewport.view().getSize().x / 2) / (int) dirtySprite.getLocalBounds().width);
     int y2 = ((int) (viewport.view().getCenter().y + viewport.view().getSize().y / 2) / (int) dirtySprite.getLocalBounds().height);
 
+    if (x1 < 0) {
+        x1--;
+    }
+    if (y1 < 0) {
+        y1--;
+    }
 
     for (int x = x1; x <= x2; x++) {
         for (int y = y1; y <= y2; y++) {

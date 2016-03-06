@@ -65,6 +65,8 @@ class Guard : public GameObject {
 
     void initBodyAnimation();
 
+    int usedHideaways = 0;
+
 public:
     Guard(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
@@ -106,6 +108,9 @@ public:
         level.add(this);
     }
 
+    virtual void startContact(GameObject* other);
+
+    virtual void endContact(GameObject* other);
 
     virtual void render(PlayerViewport &viewport) override {
         if (dead_) {

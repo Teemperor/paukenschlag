@@ -13,7 +13,7 @@
 #include <Box2D/Collision/Shapes/b2PolygonShape.h>
 #include <Box2D/Dynamics/b2Fixture.h>
 #include <GameObject.h>
-#include <extern/stlastar.h>
+#include <stlastar.h>
 #include "NavGrid.h"
 
 struct MapSearchNode {

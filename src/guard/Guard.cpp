@@ -15,12 +15,25 @@
  */
 
 
+#include <Hideaway.h>
 #include "Guard.h"
 #include "Character.h"
 #include "Utils.h"
 
 
 void Guard::update(Level& level, double deltaT) {
+
+    if (usedHideaways != 0) {
+        bool playerNear = false;
+
+        for (Character* player : level.players()) {
+            if (Utils::distance(player->position(), position()) < 5) {
+                playerNear = true;
+            }
+        }
+        if (!playerNear)
+            visible_ = false;
+    }
 
     Utils::animateTo(alpha_, visible_ ? 1 : 0, deltaT, 3);
 
@@ -64,4 +77,16 @@ void Guard::initBodyAnimation() {
     sf::Sprite knifeSprite = TextureManager::instance().loadSprite("data/guard/knife.png");
     knifeSprite.setOrigin(19, 19);
     bodyAnimation_.knifeSprite(knifeSprite, {17, 0});
+}
+
+void Guard::startContact(GameObject* other) {
+    if (dynamic_cast<Hideaway*>(other)) {
+        usedHideaways++;
+    }
+}
+
+void Guard::endContact(GameObject* other) {
+    if (dynamic_cast<Hideaway*>(other)) {
+        usedHideaways--;
+    }
 }
