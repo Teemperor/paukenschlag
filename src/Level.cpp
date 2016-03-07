@@ -69,7 +69,7 @@ void Level::render(PlayerViewport& viewport) {
 }
 
 Level::Level() : world_(b2Vec2(0.f, 0.f)) {
-    dirtySprite = TextureManager::instance().loadSprite("data/floor/sand.jpg");
+    dirtySprite = TextureManager::instance().loadSprite("data/floor/floor1.png");
     alphaSprite = TextureManager::instance().loadSprite("data/floor/alpha.png");
     sandSprite = TextureManager::instance().loadSprite("data/floor/smoothSand.png");
     world_.SetContactListener(this);

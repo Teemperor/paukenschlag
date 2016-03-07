@@ -26,6 +26,7 @@
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>
 #include <guard/Guard.h>
+#include <Door.h>
 #include "GameState.h"
 
 class IngameState : public GameState {
@@ -39,7 +40,7 @@ class IngameState : public GameState {
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
 
-        character = new Character(level, 950, 950);
+        character = new Character(level, 350, 450);
         viewport.player(character);
 
 
@@ -56,8 +57,10 @@ public:
             new Hideaway(level, 350 + i * 40, 350 + i * 40);
         new EscapeArea(level, 350, 150);
 
-        for (int i = 0; i < 10; i++)
-            new Guard(level, 1080 + 80 * i, 1000);
+        new Door(level, 140, 100);
+
+        //for (int i = 0; i < 10; i++)
+        //    new Guard(level, 1080 + 80 * i, 1000);
         level.setViewport(viewport);
         level.updateNavGrid();
     }

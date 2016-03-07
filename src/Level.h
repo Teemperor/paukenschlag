@@ -23,6 +23,7 @@
 #include <iostream>
 #include <ai/NavGrid.h>
 #include "GameObject.h"
+
 class Character;
 
 class Level : b2ContactListener {
