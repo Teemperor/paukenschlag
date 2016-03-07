@@ -49,7 +49,7 @@ public:
         BodyDef.position = b2Vec2((x + 32) / SCALE, y / SCALE);
         BodyDef.type = b2_dynamicBody;
         BodyDef.linearDamping = 1;
-        BodyDef.angularDamping = 5;
+        BodyDef.angularDamping = 10;
         b2Body* Body = level.world().CreateBody(&BodyDef);
 
         b2PolygonShape Shape;

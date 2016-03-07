@@ -283,7 +283,7 @@ void sfbl::WorldLight::render(){
     }
     _render.display();
     _window->draw(sf::Sprite(_render.getTexture()), sf::BlendMultiply);
-    _window->draw(sf::Sprite(_render.getTexture()), sf::BlendAdd);
+    //_window->draw(sf::Sprite(_render.getTexture()), sf::BlendAdd);
 }
 
 void sfbl::WorldLight::moveViewport(int x, int y){
