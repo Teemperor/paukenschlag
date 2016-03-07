@@ -31,6 +31,9 @@ void Character::endContact(GameObject* other) {
 }
 
 void Character::update(Level &level, double deltaT) {
+    fieldOfView_.position.x = position().x;
+    fieldOfView_.position.y = position().y;
+
     Utils::animateTo(alpha_, hidden() ? 0.55 : 1, deltaT, 3);
 
     for (unsigned i = 0; i < 8; i++) {
@@ -179,4 +182,34 @@ void Character::render(PlayerViewport &viewport) {
     aimTarget.x = internalPos.x / SCALE;
     aimTarget.y = internalPos.y / SCALE;
     body()->SetTransform(body()->GetPosition(), std::atan2(internalPos.y / SCALE - body()->GetPosition().y, internalPos.x / SCALE - body()->GetPosition().x));
+}
+
+Character::Character(Level &level, float x, float y)
+        : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12), fieldOfView_(10, {10, 10}, sf::Color::White) {
+    sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
+    sprite_.setOrigin(20, 20);
+
+    headSprite_ = TextureManager::instance().loadSprite("data/player/helmet.png");
+    headSprite_.setOrigin(9, 8);
+
+    initBodyAnimation();
+
+    b2BodyDef BodyDef;
+    BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
+    BodyDef.type = b2_dynamicBody;
+    BodyDef.linearDamping = 9;
+    b2Body *Body = level.world().CreateBody(&BodyDef);
+    Body->SetFixedRotation(true);
+
+    b2CircleShape Shape;
+    Shape.m_radius = 16/SCALE;
+    b2FixtureDef FixtureDef;
+    FixtureDef.density = 15.f;
+    FixtureDef.friction = friction;
+    FixtureDef.shape = &Shape;
+    FixtureDef.userData = this;
+    Body->CreateFixture(&FixtureDef);
+
+    body(Body);
+    level.add(this);
 }

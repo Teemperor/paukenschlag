@@ -61,34 +61,13 @@ class Character : public GameObject {
 
     double alpha_ = 1;
 
+    sfbl::Light fieldOfView_;
+
 public:
-    Character(Level &level, float x, float y) : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
-        sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
-        sprite_.setOrigin(20, 20);
+    Character(Level &level, float x, float y);
 
-        headSprite_ = TextureManager::instance().loadSprite("data/player/helmet.png");
-        headSprite_.setOrigin(9, 8);
-
-        initBodyAnimation();
-
-        b2BodyDef BodyDef;
-        BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
-        BodyDef.type = b2_dynamicBody;
-        BodyDef.linearDamping = 9;
-        b2Body *Body = level.world().CreateBody(&BodyDef);
-        Body->SetFixedRotation(true);
-
-        b2CircleShape Shape;
-        Shape.m_radius = 16/SCALE;
-        b2FixtureDef FixtureDef;
-        FixtureDef.density = 15.f;
-        FixtureDef.friction = friction;
-        FixtureDef.shape = &Shape;
-        FixtureDef.userData = this;
-        Body->CreateFixture(&FixtureDef);
-
-        body(Body);
-        level.add(this);
+    sfbl::Light& fieldOfView(){
+        return fieldOfView_;
     }
 
     Item& currentItem() {

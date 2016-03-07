@@ -84,6 +84,10 @@ public:
         viewport.window().draw(sprite_);
     }
 
+    virtual bool blocksView() const override{
+        return true;
+    }
+
     virtual void update(Level& level, double deltaT) override {
     }
 

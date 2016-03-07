@@ -23,6 +23,7 @@
 #include <iostream>
 #include <ai/NavGrid.h>
 #include "GameObject.h"
+#include <sfbl/sfbl.h>
 
 class Character;
 
@@ -42,6 +43,7 @@ class Level : b2ContactListener {
     sf::RenderTexture alphaTexture;
 
     NavGrid navGrid_;
+
 
 public:
     Level();

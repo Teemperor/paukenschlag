@@ -90,7 +90,7 @@ public:
                                     && WalkLineChecker::isFree(*level, node2->pos, node->pos)) {
                                 node->addNeighbour(node2);
                             } else {
-                                std::cout << "NOT FREE" << std::endl;
+                                // TODO better warning std::cout << "NOT FREE" << std::endl;
                             }
                         }
                     }

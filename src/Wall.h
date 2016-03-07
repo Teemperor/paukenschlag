@@ -50,6 +50,10 @@ public:
         level.add(this);
     }
 
+    virtual bool blocksView() const override{
+        return true;
+    }
+
     virtual bool isObstacle() const override {
         return true;
     }

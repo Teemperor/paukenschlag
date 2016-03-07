@@ -53,6 +53,10 @@ public:
 
     }
 
+    virtual bool blocksView() const {
+        return false;
+    }
+
     virtual bool isObstacle() const {
         return false;
     }

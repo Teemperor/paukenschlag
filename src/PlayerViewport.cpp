@@ -32,6 +32,8 @@ void PlayerViewport::renderEffects(Level& level) {
         } else
             break;
     }
+    worldLight_->updateSpotLight(&player_->fieldOfView());
+    worldLight_->updateNrender();
 }
 
 void PlayerViewport::addEffect(Level& level, const EffectData& data) {
@@ -93,8 +95,19 @@ PlayerViewport::PlayerViewport(Level* level, sf::RenderWindow& window) : window_
                                                                                sf::Vector2f(window_.getSize().x, window_.getSize().y)),
                                                                          level_(level) {
     SoundManager::instance().addViewport(this);
+
+    if (!worldLight_) {
+        worldLight_.reset(new sfbl::WorldLight(&level->world(), &window_));
+        worldLight_->setDarkness(10);
+    }
 }
 
 PlayerViewport::~PlayerViewport() {
     SoundManager::instance().removeViewport(this);
+}
+
+void PlayerViewport::player(Character* player) {
+    player_ = player;
+    status = PlayerStatus(player);
+    worldLight_->addAsSpotLight(&player_->fieldOfView(), 500);
 }

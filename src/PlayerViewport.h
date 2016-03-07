@@ -23,6 +23,7 @@
 #include "Effect.h"
 #include <list>
 #include <ui/PlayerStatus.h>
+#include <sfbl/sfbl.h>
 
 class Level;
 
@@ -36,6 +37,8 @@ class PlayerViewport {
 
     PlayerStatus status;
 
+    std::unique_ptr<sfbl::WorldLight> worldLight_;
+
 public:
     PlayerViewport(Level* level, sf::RenderWindow& window);
 
@@ -47,10 +50,7 @@ public:
         return player_;
     }
 
-    void player(Character* player) {
-        player_ = player;
-        status = PlayerStatus(player);
-    }
+    void player(Character* player);
 
     void updateUI(double deltaT) {
         status.update(deltaT);
