@@ -24,12 +24,9 @@ const std::string fragmentShader =
     "\n"
     "void main()\n"
     "{\n"
-    "    // lookup the pixel in the texture\n"
     "    vec4 pixel = texture2D(texture, gl_TexCoord[0].xy);\n"
     "    vec4 alphaPixel = texture2D(alphaMap, gl_TexCoord[0].xy);\n"
-    "\n"
-    "    // multiply it by the color\n"
-    "    gl_FragColor = gl_Color * alphaPixel.w * pixel;\n"
+    "    gl_FragColor = gl_Color * alphaPixel.w * pixel;\n" //  gl_Color * alphaPixel.w * pixel
     "}";
 
 void Level::add(Character* object) {
@@ -38,54 +35,31 @@ void Level::add(Character* object) {
 }
 
 void Level::render(PlayerViewport& viewport) {
-    int x1 = ((int) (viewport.view().getCenter().x - viewport.view().getSize().x / 2) / (int) dirtySprite.getLocalBounds().width);
-    int y1 = ((int) (viewport.view().getCenter().y - viewport.view().getSize().y / 2) / (int) dirtySprite.getLocalBounds().height);
-    int x2 = ((int) (viewport.view().getCenter().x + viewport.view().getSize().x / 2) / (int) dirtySprite.getLocalBounds().width);
-    int y2 = ((int) (viewport.view().getCenter().y + viewport.view().getSize().y / 2) / (int) dirtySprite.getLocalBounds().height);
 
-    if (x1 < 0) {
-        x1--;
-    }
-    if (y1 < 0) {
-        y1--;
-    }
+    alphaTexture.setView(viewport.window().getView());
 
     for (LevelArea& area : areas_) {
-        area.draw(viewport.window(), shader, alphaTexture);
+        area.draw(renderTexture, viewport.window(), shader, alphaTexture);
     }
 
-    /*
-    for (int x = x1; x <= x2; x++) {
-        for (int y = y1; y <= y2; y++) {
-            dirtySprite.setPosition(x * dirtySprite.getLocalBounds().width, y * dirtySprite.getLocalBounds().height);
-            viewport.window().draw(dirtySprite);
-        }
-    }
-
-    alphaTexture.clear(sf::Color::Transparent);
-    alphaTexture.draw(alphaSprite);
-    alphaTexture.display();
-    shader.setParameter("alphaMap", alphaTexture.getTexture());
-    viewport.window().draw(sandSprite, &shader);
-    */
+    //viewport.window().draw(sf::Sprite(alphaTexture.getTexture()));
 
     for (auto iter = objects_.rbegin(); iter != objects_.rend(); iter++) {
         (*iter)->render(viewport);
     }
+
 }
 
 Level::Level() : world_(b2Vec2(0.f, 0.f)) {
     dirtySprite = TextureManager::instance().loadSprite("data/floor/asphalt.png");
     alphaSprite = TextureManager::instance().loadSprite("data/floor/alpha.png");
-    sandSprite = TextureManager::instance().loadSprite("data/floor/snow.png");
+    sandSprite = TextureManager::instance().loadSprite("data/floor/sand.png");
     world_.SetContactListener(this);
 
-    assert(alphaTexture.create(512, 512));
+    assert(alphaTexture.create(1700, 900));
+    assert(renderTexture.create(1700, 900));
 
     shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
-    shader.setParameter("texture", sf::Shader::CurrentTexture);
-
-    areas_.push_back(LevelArea());
 }
 
 void Level::update(double deltaT) {

@@ -30,8 +30,8 @@ void LevelGenerator::generate() {
 
     new Door(level_, 140, 100);
 
-    for (int i = 0; i < 3; i++)
-        new Guard(level_, 1080 + 80 * i, 1000);
+    //for (int i = 0; i < 3; i++)
+    //    new Guard(level_, 1080 + 80 * i, 1000);
 
     new Hideaway(level_, 10 * SCALE, 10 * SCALE);
     AreaDistributor areaDistributor(10, 10);

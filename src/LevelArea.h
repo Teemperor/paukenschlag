@@ -18,7 +18,7 @@ public:
 
     LevelArea(Area& area);
 
-    void draw(sf::RenderTarget& renderTarget, sf::Shader& alphaShader, sf::RenderTexture& alphaTex);
+    void draw(sf::RenderTexture& tmpRender, sf::RenderTarget& renderTarget, sf::Shader& alphaShader, sf::RenderTexture& alphaTex);
 
     void shape(sf::Shape* shape) {
         shape_.reset(shape);

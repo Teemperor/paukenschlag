@@ -42,6 +42,7 @@ class Level : b2ContactListener {
 
     sf::Shader shader;
     sf::RenderTexture alphaTexture;
+    sf::RenderTexture renderTexture;
 
     NavGrid navGrid_;
 

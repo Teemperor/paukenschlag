@@ -68,6 +68,12 @@ void PlayerViewport::renderUI() {
             window_.draw(crosshair);
         }
     }
+
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
+        view_.zoom(1.001f);
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
+        view_.zoom(0.999f);
+
     window_.setView(window_.getDefaultView());
     status.draw(window_, 0, 0);
 }
