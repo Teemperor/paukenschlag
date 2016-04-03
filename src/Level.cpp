@@ -50,6 +50,11 @@ void Level::render(PlayerViewport& viewport) {
         y1--;
     }
 
+    for (LevelArea& area : areas_) {
+        area.draw(viewport.window(), shader, alphaTexture);
+    }
+
+    /*
     for (int x = x1; x <= x2; x++) {
         for (int y = y1; y <= y2; y++) {
             dirtySprite.setPosition(x * dirtySprite.getLocalBounds().width, y * dirtySprite.getLocalBounds().height);
@@ -62,6 +67,7 @@ void Level::render(PlayerViewport& viewport) {
     alphaTexture.display();
     shader.setParameter("alphaMap", alphaTexture.getTexture());
     viewport.window().draw(sandSprite, &shader);
+    */
 
     for (auto iter = objects_.rbegin(); iter != objects_.rend(); iter++) {
         (*iter)->render(viewport);
@@ -69,19 +75,21 @@ void Level::render(PlayerViewport& viewport) {
 }
 
 Level::Level() : world_(b2Vec2(0.f, 0.f)) {
-    dirtySprite = TextureManager::instance().loadSprite("data/floor/floor1.png");
+    dirtySprite = TextureManager::instance().loadSprite("data/floor/asphalt.png");
     alphaSprite = TextureManager::instance().loadSprite("data/floor/alpha.png");
-    sandSprite = TextureManager::instance().loadSprite("data/floor/smoothSand.png");
+    sandSprite = TextureManager::instance().loadSprite("data/floor/snow.png");
     world_.SetContactListener(this);
 
     assert(alphaTexture.create(512, 512));
 
     shader.loadFromMemory(fragmentShader, sf::Shader::Fragment);
     shader.setParameter("texture", sf::Shader::CurrentTexture);
+
+    areas_.push_back(LevelArea());
 }
 
 void Level::update(double deltaT) {
-    world_.Step(deltaT, 8, 3);
+    world_.Step((float32) deltaT, 8, 3);
     time_ += deltaT;
     for (GameObject* object : objects_) {
         object->update(*this, deltaT);

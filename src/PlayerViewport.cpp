@@ -32,8 +32,10 @@ void PlayerViewport::renderEffects(Level& level) {
         } else
             break;
     }
-    worldLight_->updateSpotLight(&player_->fieldOfView());
-    worldLight_->updateNrender();
+    window().setView(window().getDefaultView());
+    //worldLight_->setViewportPos(player_->position().x - window().getView().getSize().x / 2 / SCALE, player_->position().y - window().getView().getSize().y / 2 / SCALE);
+    //worldLight_->updateSpotLight(&player_->fieldOfView());
+    //worldLight_->updateNrender();
 }
 
 void PlayerViewport::addEffect(Level& level, const EffectData& data) {
@@ -56,16 +58,12 @@ void PlayerViewport::renderUI() {
 
         player_->level().world().RayCast(&raycaster, raycaster.start, ingameMousePos);
 
-        if (raycaster.target) {
-            crosshair.setPosition(raycaster.point.x * SCALE, raycaster.point.y * SCALE);
-        } else {
-            crosshair.setPosition(ingameMousePos.x * SCALE, ingameMousePos.y * SCALE);
-        }
+        crosshair.setPosition(ingameMousePos.x * SCALE, ingameMousePos.y * SCALE);
         crosshair.setColor(sf::Color::Red);
         window_.draw(crosshair);
 
         if (raycaster.target) {
-            crosshair.setPosition(ingameMousePos.x * SCALE, ingameMousePos.y * SCALE);
+            crosshair.setPosition(raycaster.point.x * SCALE, raycaster.point.y * SCALE);
             crosshair.setColor(sf::Color(222, 222, 222, 255));
             window_.draw(crosshair);
         }

@@ -101,7 +101,7 @@ namespace sfbl{
         void moveViewport(int x, int y);
 
         /// set viewport of lights into specific position
-        void setViewportPos(int x, int y);
+        void setViewportPos(float32 x, float32 y);
 
         /// set viewport of lights into specific position
         void setViewportPos(sf::Vector2i pos);

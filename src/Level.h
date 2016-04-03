@@ -23,6 +23,7 @@
 #include <iostream>
 #include <ai/NavGrid.h>
 #include "GameObject.h"
+#include "LevelArea.h"
 #include <sfbl/sfbl.h>
 
 class Character;
@@ -44,6 +45,7 @@ class Level : b2ContactListener {
 
     NavGrid navGrid_;
 
+    std::vector<LevelArea> areas_;
 
 public:
     Level();
@@ -68,6 +70,10 @@ public:
 
     NavGrid& navGrid() {
         return navGrid_;
+    }
+
+    std::vector<LevelArea>& areas() {
+        return areas_;
     }
 
     void render(PlayerViewport& viewport);

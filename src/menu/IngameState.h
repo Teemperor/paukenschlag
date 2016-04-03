@@ -27,6 +27,7 @@
 #include <goals/EscapeArea.h>
 #include <guard/Guard.h>
 #include <Door.h>
+#include <levelgen/LevelGenerator.h>
 #include "GameState.h"
 
 class IngameState : public GameState {
@@ -40,27 +41,12 @@ class IngameState : public GameState {
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
 
-        character = new Character(level, 350, 450);
+        character = new Character(level, 20 * SCALE, 20 * SCALE);
         viewport.player(character);
 
+        LevelGenerator generator(level);
+        generator.generate();
 
-        for (int i = 0; i < 10; i++) {
-            int x = Utils::rndGen() % 2000;
-            int y = Utils::rndGen() % 2000;
-            new Wall(level, x, y);
-        }
-
-        new Cover(level, 300, 600);
-
-        new Crate(level, 100, 100);
-        for (int i = 0; i < 17; i++)
-            new Hideaway(level, 350 + i * 40, 350 + i * 40);
-        new EscapeArea(level, 350, 150);
-
-        new Door(level, 140, 100);
-
-        //for (int i = 0; i < 10; i++)
-        //    new Guard(level, 1080 + 80 * i, 1000);
         level.setViewport(viewport);
         level.updateNavGrid();
     }

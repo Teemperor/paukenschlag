@@ -36,8 +36,8 @@ class Character : public GameObject {
     sf::Sprite headSprite_;
 
     const float friction = 99.1f;
-    const float runSpeed = 850.0f;
-    const float walkSpeed = 450.0f;
+    const float runSpeed = 650.0f;
+    const float walkSpeed = 400.0f;
 
     float controlX = 0;
     float controlY = 0;

@@ -121,9 +121,9 @@ void Character::update(Level &level, double deltaT) {
             double rotation = std::atan2(controlY, controlX);
             walkAngle = rotation;
 
-            double speed = runSpeed;
+            double speed = walkSpeed;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift))
-                speed = walkSpeed;
+                speed = runSpeed;
 
             body()->ApplyForce(b2Vec2((float32) (std::cos(rotation) * speed),
                                       (float32) (std::cos(rotation - M_PI / 2) * speed)), body()->GetWorldCenter(), true);

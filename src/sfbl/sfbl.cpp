@@ -297,15 +297,15 @@ void sfbl::WorldLight::moveViewport(int x, int y){
     _viewPort += sf::Vector2f(x, y);
 }
 
-void sfbl::WorldLight::setViewportPos(int x, int y){
-    sf::Vector2f move = (_viewPort - sf::Vector2f(x, y));
+void sfbl::WorldLight::setViewportPos(float32 x, float32 y){
+    /*sf::Vector2f move = (_viewPort - sf::Vector2f(x, y));
     for (size_t m = 0; m < fixedMesh.size(); m++)
     {
         for (size_t i = 0; i < fixedMesh[m].getVertexCount(); i++)
         {
             fixedMesh[m][i].position += move;
         }
-    }
+    } */
     _viewPort.x = x;
     _viewPort.y = y;
 }

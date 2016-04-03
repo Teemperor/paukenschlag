@@ -26,11 +26,19 @@
 class Wall : public GameObject {
 
     sf::Sprite sprite_;
+    sf::Sprite spriteStart_;
+    sf::Sprite spriteEnd_;
 
 public:
-    Wall(Level& level, float x, float y) : GameObject(&level) {
-        sprite_ = TextureManager::instance().loadSprite("data/landscape/rock1.png");
+    Wall(Level& level, float x, float y, float width, const std::string& filePath) : GameObject(&level) {
+        sprite_ = TextureManager::instance().loadSprite(filePath + ".png");
         sprite_.setOrigin(sprite_.getLocalBounds().width / 2, sprite_.getLocalBounds().height / 2);
+
+        spriteStart_ = TextureManager::instance().loadSprite(filePath + "Start.png");
+        spriteStart_.setOrigin(spriteStart_.getLocalBounds().width / 2, spriteStart_.getLocalBounds().height / 2);
+
+        spriteEnd_ = TextureManager::instance().loadSprite(filePath + "End.png");
+        spriteEnd_.setOrigin(spriteEnd_.getLocalBounds().width / 2, spriteEnd_.getLocalBounds().height / 2);
 
         b2BodyDef BodyDef;
         BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
