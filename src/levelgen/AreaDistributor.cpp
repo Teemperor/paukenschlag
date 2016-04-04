@@ -40,6 +40,7 @@ void AreaDistributor::splitAreas(Area& area) {
         splitAreas(area2);
 
     } else {
-        areas_.push_back(area);
+        area.background() = "asphalt";
+        info_.areas().push_back(area);
     }
 }

@@ -21,16 +21,25 @@ void LevelGenerator::generate() {
     new Hideaway(level_, 0, 0);
     new EscapeArea(level_, 350, 150);
 
-
     for (int i = 0; i < 3; i++)
         new Guard(level_, 180 + 80 * i, 180);
 
     new Hideaway(level_, 10 * SCALE, 10 * SCALE);
-    AreaDistributor areaDistributor(10, 10, 100, 100);
 
-    for (Area& area : areaDistributor.areas()) {
+    AreaDistributor(info, 10, 10, 100, 100);
+
+    Area grass1(0, 0, 10, 100);
+    Area grass2(10, 0, 100, 10);
+    grass1.background() = "grass";
+    grass2.background() = "grass";
+    info.areas().push_back(grass1);
+    info.areas().push_back(grass2);
+
+    for (Area& area : info.areas()) {
         level_.areas().push_back(LevelArea(area));
 
+        if (area.background() == "grass")
+            continue;
         if (area.width() > 3) {
             new Wall(level_,
                      b2Vec2(area.x(), area.y()),

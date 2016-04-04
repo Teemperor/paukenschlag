@@ -36,10 +36,6 @@ class Level : b2ContactListener {
     double time_ = 0;
     PlayerViewport* viewport_;
 
-    sf::Sprite dirtySprite;
-    sf::Sprite sandSprite;
-    sf::Sprite alphaSprite;
-
     sf::Shader shader;
     sf::RenderTexture alphaTexture;
     sf::RenderTexture renderTexture;

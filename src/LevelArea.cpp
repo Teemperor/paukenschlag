@@ -25,22 +25,9 @@ void LevelArea::draw(sf::RenderTexture& tmpRender, sf::RenderTarget& renderTarge
         alphaShader.setParameter("alphaMap", alphaTexture.getTexture());
         alphaShader.setParameter("texture", sf::Shader::CurrentTexture);
 
-        float startX = shape_->getPosition().x;
-        float endX = shape_->getPosition().x + shape_->getLocalBounds().width;
-        float deltaX = groundTexture.getLocalBounds().width;
-
-        float startY = shape_->getPosition().y;
-        float endY = shape_->getPosition().y + shape_->getLocalBounds().height;
-        float deltaY = groundTexture.getLocalBounds().height;
-
         tmpRender.clear(sf::Color::Transparent);
 
-        for (float x = startX; x < endX; x += deltaX) {
-            for (float y = startY; y < endY; y += deltaY) {
-                groundTexture.setPosition(sf::Vector2f(x, y));
-                tmpRender.draw(groundTexture);
-            }
-        }
+        tmpRender.draw(groundTexture);
 
         tmpRender.display();
 
@@ -62,22 +49,13 @@ LevelArea::LevelArea(Area& area) {
 
     outline_ = sf::FloatRect(area.x() * SCALE, area.y() * SCALE, area.width() * SCALE, area.height() * SCALE);
 
-    std::string tex;
-    switch(rand() % 4) {
-        case 0:
-            tex = "data/floor/asphalt.png";
-            break;
-        case 1:
-            tex = "data/floor/forest.png";
-            break;
-        case 2:
-            tex = "data/floor/stoneroad.png";
-            break;
-        case 3:
-            tex = "data/floor/tiles.png";
-            break;
-    }
-    groundTexture = TextureManager::instance().loadSprite(tex);
+    std::string tex = "data/floor/" + area.background() + ".png";
+
+    groundTexture = TextureManager::instance().loadSprite(tex, true);
+
+    sf::IntRect intRect(0, 0, (int) (area.width() * SCALE), (int) (area.height() * SCALE));
+    groundTexture.setTextureRect(intRect);
+    groundTexture.setPosition(sf::Vector2f(rect->getPosition().x, rect->getPosition().y));
 
     std::cout << "SHAPE[" << shape_->getPosition().x << "," << shape_->getPosition().y << ";" << shape_->getLocalBounds().width << "," << shape_->getLocalBounds().height << "]" << std::endl;
 }

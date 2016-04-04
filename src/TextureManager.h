@@ -37,7 +37,7 @@ public:
         return instance_;
     }
 
-    sf::Sprite loadSprite(const std::string& path) {
+    sf::Sprite loadSprite(const std::string& path, bool repeated = false) {
         sf::Texture* texture;
         auto iter = texturesByPath_.find(path);
         if (iter != texturesByPath_.end()) {
@@ -45,6 +45,7 @@ public:
         } else {
             texture = new sf::Texture();
             texture->loadFromFile(path);
+            texture->setRepeated(repeated);
             texturesByPath_[path] = texture;
         }
         sf::Sprite result(*texture);
