@@ -45,7 +45,7 @@ class NavGrid {
 
     std::vector<std::vector<NavNode*>> nodes_;
 
-    float gridSpacing_ = 2;
+    float gridSpacing_ = 1;
     float xMax_ = 50;
     float yMax_ = 50;
 

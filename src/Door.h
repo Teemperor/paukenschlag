@@ -49,16 +49,19 @@ public:
         BodyDef.position = b2Vec2((x + 32) / SCALE, y / SCALE);
         BodyDef.type = b2_dynamicBody;
         BodyDef.linearDamping = 1;
-        BodyDef.angularDamping = 10;
+        BodyDef.angularDamping = 5;
         b2Body* Body = level.world().CreateBody(&BodyDef);
 
         b2PolygonShape Shape;
         Shape.SetAsBox(32.f / SCALE, 3.f / SCALE);
         b2FixtureDef FixtureDef;
         FixtureDef.density = 64.f;
-        FixtureDef.friction = 0.9f;
+        FixtureDef.friction = 0.0f;
         FixtureDef.shape = &Shape;
+        FixtureDef.filter.categoryBits = objectCategory::THING;
+        FixtureDef.filter.maskBits = ~objectCategory::WALL;
         FixtureDef.userData = this;
+
         Body->CreateFixture(&FixtureDef);
 
         b2RevoluteJointDef revoluteJointDef;
@@ -67,8 +70,8 @@ public:
         revoluteJointDef.collideConnected = false;
         revoluteJointDef.localAnchorA.Set(-32 / SCALE, 3 / SCALE);
         revoluteJointDef.localAnchorB.Set(0, 0);
-        revoluteJointDef.lowerAngle = -b2_pi * 0.7f;
-        revoluteJointDef.upperAngle = b2_pi * 0.7f;
+        revoluteJointDef.lowerAngle = -b2_pi * 0.6f;
+        revoluteJointDef.upperAngle = b2_pi * 0.6f;
         revoluteJointDef.enableLimit = true;
         b2Joint* joint = level.world().CreateJoint(&revoluteJointDef);
 

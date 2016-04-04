@@ -23,6 +23,8 @@ const float SCALE = 32.f;
 
 enum objectCategory {
     THING =          0x0001,
+    WALL =          0x0002,
+    ENEMY =          0x0004,
 };
 
 #endif //SHOOTER_CONSTANTS_H

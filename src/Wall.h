@@ -33,7 +33,7 @@ class Wall : public GameObject {
     b2Vec2 start_;
 
 public:
-    Wall(Level& level, const b2Vec2& start, const b2Vec2& end, float width, const std::string& filePath);
+    Wall(Level& level, const b2Vec2& start, const b2Vec2& end, const std::string& filePath);
 
     constexpr static float halfWallWidth = 0.2f;
 

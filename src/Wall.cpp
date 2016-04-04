@@ -42,7 +42,7 @@ void Wall::render(PlayerViewport& viewport) {
         viewport.window().draw(spriteEnd_);
 }
 
-Wall::Wall(Level& level, const b2Vec2& start, const b2Vec2& end, float width, const std::string& filePath)
+Wall::Wall(Level& level, const b2Vec2& start, const b2Vec2& end, const std::string& filePath)
         : GameObject(&level), start_(start) {
         b2Vec2 mid = b2Vec2((start.x + end.x) / 2, (start.y + end.y) / 2);
         length_ = Utils::distance(start, end);
@@ -70,6 +70,10 @@ Wall::Wall(Level& level, const b2Vec2& start, const b2Vec2& end, float width, co
         FixtureDef.density = 0.f;
         FixtureDef.shape = &Shape;
         FixtureDef.userData = this;
+        FixtureDef.friction = 0;
+        FixtureDef.filter.categoryBits = objectCategory::WALL;
+        FixtureDef.filter.maskBits = ~objectCategory::WALL;
+
         Body->CreateFixture(&FixtureDef);
 
         body(Body);

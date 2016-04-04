@@ -74,7 +74,7 @@ LevelArea::LevelArea(Area& area) {
             tex = "data/floor/stoneroad.png";
             break;
         case 3:
-            tex = "data/floor/forest.png";
+            tex = "data/floor/tiles.png";
             break;
     }
     groundTexture = TextureManager::instance().loadSprite(tex);

@@ -97,8 +97,8 @@ public:
         Shape.m_radius = 16 / SCALE;
         b2FixtureDef FixtureDef;
         FixtureDef.density = 15.f;
-        FixtureDef.filter.categoryBits = 0x2;
-        FixtureDef.filter.maskBits = ~0x2;
+        FixtureDef.filter.categoryBits = objectCategory::ENEMY;
+        FixtureDef.filter.maskBits = ~objectCategory::ENEMY;
         FixtureDef.friction = friction;
         FixtureDef.shape = &Shape;
         FixtureDef.userData = this;

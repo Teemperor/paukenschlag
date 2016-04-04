@@ -2,7 +2,7 @@
 #include "WalkLineChecker.h"
 #include <Level.h>
 
-const std::vector<float> checkOffsets = {-1.1f, 0, 1.1f};
+const std::vector<float> checkOffsets = {-0.3f, 0, 0.3f};
 
 bool WalkLineChecker::isFree(Level& level, b2Vec2& start, b2Vec2& end) {
     for (float xOffset : checkOffsets) {
