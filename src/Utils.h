@@ -22,6 +22,7 @@
 #include <Box2D/Common/b2Math.h>
 #include <cmath>
 #include <random>
+#include <SFML/System.hpp>
 
 class Utils {
 
@@ -30,6 +31,12 @@ public:
     static std::default_random_engine rndGen;
 
     static double distance(const b2Vec2& start, const b2Vec2& end) {
+        double diffX = start.x - end.x;
+        double diffY = start.y - end.y;
+        return sqrt(diffX * diffX + diffY * diffY);
+    }
+
+    static double distance(const sf::Vector2f& start, const sf::Vector2f& end) {
         double diffX = start.x - end.x;
         double diffY = start.y - end.y;
         return sqrt(diffX * diffX + diffY * diffY);

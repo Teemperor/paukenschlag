@@ -41,7 +41,7 @@ class IngameState : public GameState {
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
 
-        character = new Character(level, 20 * SCALE, 20 * SCALE);
+        character = new Character(level, 2 * SCALE, 2 * SCALE);
         viewport.player(character);
 
         LevelGenerator generator(level);

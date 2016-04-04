@@ -28,35 +28,14 @@ class Wall : public GameObject {
     sf::Sprite sprite_;
     sf::Sprite spriteStart_;
     sf::Sprite spriteEnd_;
+    float length_;
+    float angle_;
+    b2Vec2 start_;
 
 public:
-    Wall(Level& level, float x, float y, float width, const std::string& filePath) : GameObject(&level) {
-        sprite_ = TextureManager::instance().loadSprite(filePath + ".png");
-        sprite_.setOrigin(sprite_.getLocalBounds().width / 2, sprite_.getLocalBounds().height / 2);
+    Wall(Level& level, const b2Vec2& start, const b2Vec2& end, float width, const std::string& filePath);
 
-        spriteStart_ = TextureManager::instance().loadSprite(filePath + "Start.png");
-        spriteStart_.setOrigin(spriteStart_.getLocalBounds().width / 2, spriteStart_.getLocalBounds().height / 2);
-
-        spriteEnd_ = TextureManager::instance().loadSprite(filePath + "End.png");
-        spriteEnd_.setOrigin(spriteEnd_.getLocalBounds().width / 2, spriteEnd_.getLocalBounds().height / 2);
-
-        b2BodyDef BodyDef;
-        BodyDef.position = b2Vec2(x/SCALE, y/SCALE);
-        BodyDef.angle = 0.1f;
-        BodyDef.type = b2_staticBody;
-        b2Body* Body = level.world().CreateBody(&BodyDef);
-
-        b2PolygonShape Shape;
-        Shape.SetAsBox((sprite_.getLocalBounds().width/2)/SCALE, (sprite_.getLocalBounds().height/2)/SCALE);
-        b2FixtureDef FixtureDef;
-        FixtureDef.density = 0.f;
-        FixtureDef.shape = &Shape;
-        FixtureDef.userData = this;
-        Body->CreateFixture(&FixtureDef);
-
-        body(Body);
-        level.add(this);
-    }
+    constexpr static float halfWallWidth = 0.2f;
 
     virtual bool blocksView() const override{
         return true;
@@ -66,11 +45,7 @@ public:
         return true;
     }
 
-    virtual void render(PlayerViewport& viewport) override {
-        sprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-        sprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-        viewport.window().draw(sprite_);
-    }
+    virtual void render(PlayerViewport& viewport);
 
     virtual void update(Level& level, double deltaT) override {
     }

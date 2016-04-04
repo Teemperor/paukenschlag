@@ -34,6 +34,7 @@ public:
 
 private:
 
+    sf::FloatRect outline_;
     std::unique_ptr<sf::Shape> shape_;
     sf::Sprite groundTexture;
 

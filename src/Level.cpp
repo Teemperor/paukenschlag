@@ -38,9 +38,15 @@ void Level::render(PlayerViewport& viewport) {
 
     alphaTexture.setView(viewport.window().getView());
 
+
+    renderTexture.setView(viewport.window().getView());
+    sf::View viewBak = viewport.window().getView();
+    viewport.window().setView(viewport.window().getDefaultView());
+
     for (LevelArea& area : areas_) {
         area.draw(renderTexture, viewport.window(), shader, alphaTexture);
     }
+    viewport.window().setView(viewBak);
 
     //viewport.window().draw(sf::Sprite(alphaTexture.getTexture()));
 
