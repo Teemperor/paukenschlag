@@ -69,8 +69,8 @@ class AreaDistributor {
 
 public:
 
-    AreaDistributor(int w, int h) {
-        baseArea_ = Area(0, 0, w, h);
+    AreaDistributor(int x, int y, int w, int h) {
+        baseArea_ = Area(x, y, w, h);
         splitAreas(baseArea_);
     }
 

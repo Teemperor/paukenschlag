@@ -26,7 +26,7 @@ void LevelGenerator::generate() {
         new Guard(level_, 180 + 80 * i, 180);
 
     new Hideaway(level_, 10 * SCALE, 10 * SCALE);
-    AreaDistributor areaDistributor(100, 100);
+    AreaDistributor areaDistributor(10, 10, 100, 100);
 
     for (Area& area : areaDistributor.areas()) {
         level_.areas().push_back(LevelArea(area));
@@ -55,5 +55,9 @@ void LevelGenerator::generate() {
                  b2Vec2(area.x(), area.y()),
                  b2Vec2(area.x(), area.y() + area.height()),
                  "data/walls/stone");
+        /*new Wall(level_,
+                 b2Vec2(area.x(), area.y() + area.height()),
+                 b2Vec2(area.x() + area.width(), area.y() + area.height()),
+                 "data/walls/stone");*/
     }
 }

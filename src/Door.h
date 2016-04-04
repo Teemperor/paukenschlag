@@ -30,7 +30,6 @@ public:
     Door(Level& level, float x, float y) : GameObject(&level) {
             sprite_ = TextureManager::instance().loadSprite("data/doors/door.png");
 
-
         b2BodyDef JointBodyDef;
         JointBodyDef.position = b2Vec2(x / SCALE, y / SCALE);
         JointBodyDef.type = b2_staticBody;
