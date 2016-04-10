@@ -6,7 +6,7 @@
 #include <Crate.h>
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>
-#include <guard/Guard.h>
+#include <guard/Soldier.h>
 #include <Door.h>
 #include <levelgen/LevelGenerator.h>
 #include <levelgen/AreaDistributor.h>
@@ -22,7 +22,7 @@ void LevelGenerator::generate() {
     new EscapeArea(level_, 350, 150);
 
     for (int i = 0; i < 3; i++)
-        new Guard(level_, 180 + 80 * i, 180);
+        new Soldier(level_, 180 + 80 * i, 180);
 
     new Hideaway(level_, 10 * SCALE, 10 * SCALE);
 

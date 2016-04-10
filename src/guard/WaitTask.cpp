@@ -17,7 +17,7 @@
 
 #include "WaitTask.h"
 
-void WaitTask::update(Guard& guard, Level& level, double deltaT) {
+void WaitTask::update(Soldier& guard, Level& level, double deltaT) {
     waitTime -= deltaT;
     if (waitTime < 0)
         finish();

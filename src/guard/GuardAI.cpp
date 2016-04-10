@@ -19,7 +19,7 @@
 #include <Level.h>
 #include <Character.h>
 #include <LOSChecker.h>
-#include "Guard.h"
+#include "Soldier.h"
 #include "GuardMonitorTask.h"
 #include "WanderTask.h"
 
@@ -27,7 +27,7 @@
 static std::default_random_engine generator;
 static std::uniform_real_distribution<float> headRotationDistribution(-0.7f, 0.7f);
 
-void GuardAI::update(Guard& guard, Level& level, double deltaT) {
+void GuardAI::update(Soldier& guard, Level& level, double deltaT) {
 
     if (level.time() > nextHeadAdjustTime) {
         nextHeadAdjustTime = level.time() + 1.5;
@@ -43,7 +43,7 @@ void GuardAI::update(Guard& guard, Level& level, double deltaT) {
     }*/
 }
 
-void GuardAI::checkPlayerVisibility(Guard& guard, Level& level, double deltaT) {
+void GuardAI::checkPlayerVisibility(Soldier& guard, Level& level, double deltaT) {
     visiblePlayers_.clear();
 
     modSuspicion(-deltaT / 3.0f);

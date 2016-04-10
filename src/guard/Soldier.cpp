@@ -16,12 +16,12 @@
 
 
 #include <Hideaway.h>
-#include "Guard.h"
+#include "Soldier.h"
 #include "Character.h"
 #include "Utils.h"
 
 
-void Guard::update(Level& level, double deltaT) {
+void Soldier::update(Level& level, double deltaT) {
 
     if (usedHideaways != 0) {
         bool playerNear = false;
@@ -57,11 +57,11 @@ void Guard::update(Level& level, double deltaT) {
     }
 }
 
-void Guard::shoot(b2Vec2 target) {
+void Soldier::shoot(b2Vec2 target) {
     weapon().tryUse(level(), position(), target);
 }
 
-void Guard::initBodyAnimation() {
+void Soldier::initBodyAnimation() {
     sf::Sprite idleSprite = TextureManager::instance().loadSprite("data/guard/idle.png");
     idleSprite.setOrigin(20, 20);
     bodyAnimation_.idleSprite(idleSprite);
@@ -79,13 +79,13 @@ void Guard::initBodyAnimation() {
     bodyAnimation_.knifeSprite(knifeSprite, {17, 0});
 }
 
-void Guard::startContact(GameObject* other) {
+void Soldier::startContact(GameObject* other) {
     if (dynamic_cast<Hideaway*>(other)) {
         usedHideaways++;
     }
 }
 
-void Guard::endContact(GameObject* other) {
+void Soldier::endContact(GameObject* other) {
     if (dynamic_cast<Hideaway*>(other)) {
         usedHideaways--;
     }

@@ -113,5 +113,4 @@ PlayerViewport::~PlayerViewport() {
 void PlayerViewport::player(Character* player) {
     player_ = player;
     status = PlayerStatus(player);
-    worldLight_->addAsSpotLight(&player_->fieldOfView(), 500);
 }

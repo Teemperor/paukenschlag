@@ -35,7 +35,7 @@ class WalkToTask : public GuardTask {
 
 public:
     WalkToTask(const b2Vec2& target, double goalDistance = 0.3);
-    virtual void update(Guard& guard, Level& level, double deltaT);
+    virtual void update(Soldier& guard, Level& level, double deltaT);
 };
 
 

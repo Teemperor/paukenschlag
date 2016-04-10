@@ -31,8 +31,6 @@ void Character::endContact(GameObject* other) {
 }
 
 void Character::update(Level &level, double deltaT) {
-    fieldOfView_.position.x = position().x;
-    fieldOfView_.position.y = position().y;
 
     Utils::animateTo(alpha_, hidden() ? 0.55 : 1, deltaT, 3);
 
@@ -185,7 +183,7 @@ void Character::render(PlayerViewport &viewport) {
 }
 
 Character::Character(Level &level, float x, float y)
-        : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12), fieldOfView_(10, {10, 10}, sf::Color::White) {
+        : GameObject(&level), legAnimation_("data/player/legs.png", 14, 12) {
     sprite_ = TextureManager::instance().loadSprite("data/player/idle.png");
     sprite_.setOrigin(20, 20);
 

@@ -5,7 +5,7 @@
 #include "Wall.h"
 #include <Crate.h>
 #include <Character.h>
-#include <guard/Guard.h>
+#include <guard/Soldier.h>
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>
 #include <Cover.h>

@@ -27,9 +27,9 @@ class GuardCombatTask : public GuardTask {
     Character* target = nullptr;
 
 public:
-    virtual void update(Guard& guard, Level& level, double deltaT);
+    virtual void update(Soldier& guard, Level& level, double deltaT);
 
-    virtual void passiveUpdate(Guard& guard, Level& level, double deltaT);
+    virtual void passiveUpdate(Soldier& guard, Level& level, double deltaT);
 
 };
 

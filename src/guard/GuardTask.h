@@ -20,7 +20,7 @@
 
 #include <memory>
 
-class Guard;
+class Soldier;
 class Level;
 
 class GuardTask {
@@ -29,9 +29,9 @@ class GuardTask {
     bool finished_ = false;
 
 public:
-    virtual void update(Guard& guard, Level& level, double deltaT) = 0;
+    virtual void update(Soldier& guard, Level& level, double deltaT) = 0;
 
-    void doUpdate(Guard& guard, Level& level, double deltaT) {
+    void doUpdate(Soldier& guard, Level& level, double deltaT) {
         if (childTask_) {
             childTask_->doUpdate(guard, level, deltaT);
             if (childTask_->finished()) {
@@ -61,7 +61,7 @@ public:
         return finished_;
     }
 
-    virtual void passiveUpdate(Guard& guard, Level& level, double deltaT) {
+    virtual void passiveUpdate(Soldier& guard, Level& level, double deltaT) {
 
     }
 

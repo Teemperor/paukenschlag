@@ -15,8 +15,8 @@
  */
 
 
-#ifndef SHOOTER_GUARD_H
-#define SHOOTER_GUARD_H
+#ifndef SHOOTER_SOLDIER_H
+#define SHOOTER_SOLDIER_H
 
 #include <iostream>
 #include <LegAnimation.h>
@@ -31,7 +31,7 @@
 #include "FOVIndicator.h"
 
 
-class Guard : public GameObject {
+class Soldier : public GameObject {
 
     friend class GuardAI;
 
@@ -68,7 +68,7 @@ class Guard : public GameObject {
     int usedHideaways = 0;
 
 public:
-    Guard(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
+    Soldier(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
         sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
         sprite_.setOrigin(20, 20);
 
@@ -108,9 +108,9 @@ public:
         level.add(this);
     }
 
-    virtual void startContact(GameObject* other);
+    virtual void startContact(GameObject* other) override;
 
-    virtual void endContact(GameObject* other);
+    virtual void endContact(GameObject* other) override;
 
     virtual void render(PlayerViewport &viewport) override {
         if (dead_) {

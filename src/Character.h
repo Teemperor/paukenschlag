@@ -61,14 +61,8 @@ class Character : public GameObject {
 
     double alpha_ = 1;
 
-    sfbl::Light fieldOfView_;
-
 public:
     Character(Level &level, float x, float y);
-
-    sfbl::Light& fieldOfView(){
-        return fieldOfView_;
-    }
 
     Item& currentItem() {
         return items_[selectedItem_];
@@ -82,7 +76,7 @@ public:
         return selectedItem_;
     }
 
-    virtual void render(PlayerViewport &viewport);
+    virtual void render(PlayerViewport &viewport) override;
 
     void pulledTrigger();
 
@@ -90,11 +84,11 @@ public:
         return usedHideaways != 0;
     }
 
-    virtual void startContact(GameObject* other);
+    virtual void startContact(GameObject* other) override;
 
-    virtual void endContact(GameObject* other);
+    virtual void endContact(GameObject* other) override;
 
-    virtual void update(Level &level, double deltaT);
+    virtual void update(Level &level, double deltaT) override;
 
     virtual void damage(const b2Vec2& hitPos) override {
         std::cout << "Player was hit" << std::endl;

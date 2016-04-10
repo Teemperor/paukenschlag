@@ -26,7 +26,7 @@
 #include "GuardTask.h"
 
 class Level;
-class Guard;
+class Soldier;
 
 class GuardAI {
 
@@ -35,7 +35,7 @@ class GuardAI {
     double suspicion_ = 0;
     double nextHeadAdjustTime = 0;
 
-    void checkPlayerVisibility(Guard& guard, Level& level, double deltaT);
+    void checkPlayerVisibility(Soldier& guard, Level& level, double deltaT);
 
     bool alarmed_ = false;
 
@@ -56,7 +56,7 @@ class GuardAI {
 public:
     GuardAI();
 
-    void update(Guard& guard, Level& level, double deltaT);
+    void update(Soldier& guard, Level& level, double deltaT);
 
     void modSuspicion(double diff) {
         suspicion_ += diff;

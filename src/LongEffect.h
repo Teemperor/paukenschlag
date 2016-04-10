@@ -71,7 +71,7 @@ public:
         return false;
     }
 
-    virtual bool hittable() const {
+    virtual bool hittable() const override {
         return false;
     }
 

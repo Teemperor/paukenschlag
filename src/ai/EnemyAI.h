@@ -4,11 +4,11 @@
 
 #include <list>
 
-class Guard;
+class Soldier;
 
 class EnemyAI {
 
-    std::list<Guard*> guards_;
+    std::list<Soldier*> guards_;
 
 public:
     EnemyAI() {

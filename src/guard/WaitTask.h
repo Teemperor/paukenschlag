@@ -30,7 +30,7 @@ public:
 
     }
 
-    virtual void update(Guard& guard, Level& level, double deltaT);
+    virtual void update(Soldier& guard, Level& level, double deltaT);
 };
 
 

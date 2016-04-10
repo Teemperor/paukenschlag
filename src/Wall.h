@@ -45,7 +45,7 @@ public:
         return true;
     }
 
-    virtual void render(PlayerViewport& viewport);
+    virtual void render(PlayerViewport& viewport) override;
 
     virtual void update(Level& level, double deltaT) override {
     }

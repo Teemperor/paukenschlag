@@ -16,14 +16,14 @@
 
 
 #include "WanderTask.h"
-#include "Guard.h"
+#include "Soldier.h"
 #include "WalkToTask.h"
 #include "WaitTask.h"
 
 static std::default_random_engine generator;
 static std::uniform_real_distribution<float> headRotationDistribution(-15.7f, 15.7f);
 
-void WanderTask::update(Guard& guard, Level& level, double deltaT) {
+void WanderTask::update(Soldier& guard, Level& level, double deltaT) {
 
     if (isWalking) {
         isWalking = false;

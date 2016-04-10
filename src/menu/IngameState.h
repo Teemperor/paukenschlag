@@ -25,7 +25,7 @@
 #include <Crate.h>
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>
-#include <guard/Guard.h>
+#include <guard/Soldier.h>
 #include <Door.h>
 #include <levelgen/LevelGenerator.h>
 #include "GameState.h"

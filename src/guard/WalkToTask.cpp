@@ -16,9 +16,9 @@
 
 
 #include "WalkToTask.h"
-#include "Guard.h"
+#include "Soldier.h"
 
-void WalkToTask::update(Guard& guard, Level& level, double deltaT) {
+void WalkToTask::update(Soldier& guard, Level& level, double deltaT) {
     if (path == nullptr) {
         b2Vec2 start = guard.position();
         path = level.navGrid().searchPath(start, target_);
