@@ -26,6 +26,7 @@
 #include <sfbl/sfbl.h>
 
 class Level;
+class Soldier;
 
 class PlayerViewport {
 
@@ -33,7 +34,7 @@ class PlayerViewport {
     sf::View view_;
     std::list<Effect> effects_;
     Level* level_;
-    Character* player_;
+    Soldier* player_;
 
     PlayerStatus status;
 
@@ -46,11 +47,11 @@ public:
 
     void renderUI();
 
-    Character* player() {
+    Soldier* player() {
         return player_;
     }
 
-    void player(Character* player);
+    void player(Soldier* player);
 
     void updateUI(double deltaT) {
         status.update(deltaT);

@@ -1,7 +1,6 @@
 #include "LevelGenerator.h"
 #include "LevelArea.h"
 #include "Level.h"
-#include <Character.h>
 #include <Cover.h>
 #include <Crate.h>
 #include <Hideaway.h>

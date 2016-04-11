@@ -22,7 +22,6 @@
 #include <Box2D/Common/b2Math.h>
 #include <list>
 #include <memory>
-#include <Character.h>
 #include "GuardTask.h"
 
 class Level;
@@ -39,7 +38,7 @@ class GuardAI {
 
     bool alarmed_ = false;
 
-    std::list<Character*> visiblePlayers_;
+    std::list<Soldier*> visiblePlayers_;
     b2Vec2 lastKnownPlayerPos_ = {0, 0};
     b2Vec2 lastSound_ = {0, 0};
 
@@ -72,7 +71,7 @@ public:
         return suspicion_;
     }
 
-    std::list<Character*> visiblePlayers() {
+    std::list<Soldier*> visiblePlayers() {
         return visiblePlayers_;
     }
 

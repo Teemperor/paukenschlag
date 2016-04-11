@@ -26,13 +26,14 @@
 #include "LevelArea.h"
 #include <sfbl/sfbl.h>
 
-class Character;
+
+class Soldier;
 
 class Level : b2ContactListener {
 
     b2World world_;
     std::list<GameObject*> objects_;
-    std::list<Character*> players_;
+    std::list<Soldier*> players_;
     double time_ = 0;
     PlayerViewport* viewport_;
 
@@ -85,7 +86,7 @@ public:
         objects_.push_back(object);
     }
 
-    void add(Character* object);
+    void addPlayer(Soldier* object);
 
     b2World& world() {
         return world_;
@@ -99,7 +100,7 @@ public:
         return *viewport_;
     }
 
-    std::list<Character*>& players() {
+    std::list<Soldier*>& players() {
         return players_;
     }
 };

@@ -4,7 +4,6 @@
 #include <Level.h>
 #include "Wall.h"
 #include <Crate.h>
-#include <Character.h>
 #include <guard/Soldier.h>
 #include <Hideaway.h>
 #include <goals/EscapeArea.h>

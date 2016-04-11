@@ -20,7 +20,6 @@
 
 
 #include <Level.h>
-#include <Character.h>
 #include <Cover.h>
 #include <Crate.h>
 #include <Hideaway.h>
@@ -34,14 +33,14 @@ class IngameState : public GameState {
 
     Level level;
 
-    Character* character;
+    Soldier* character;
 
     PlayerViewport viewport;
 
 public:
     IngameState(sf::RenderWindow& window) : viewport(&level, window) {
 
-        character = new Character(level, 2 * SCALE, 2 * SCALE);
+        character = new Soldier(level, 2 * SCALE, 2 * SCALE);
         viewport.player(character);
 
         LevelGenerator generator(level);
@@ -65,7 +64,7 @@ public:
 
     virtual void handleEvent(sf::Event& event) override {
         if (event.type == sf::Event::MouseButtonPressed && event.mouseButton.button == sf::Mouse::Left) {
-            viewport.player()->pulledTrigger();
+            viewport.player()->pullTrigger();
         }
     }
 };

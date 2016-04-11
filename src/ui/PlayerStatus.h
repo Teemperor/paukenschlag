@@ -21,19 +21,19 @@
 #include <SFML/Graphics/Sprite.hpp>
 #include <TextureManager.h>
 
-class Character;
+class Soldier;
 class Item;
 
 class PlayerStatus {
 
     sf::Sprite itemCircle;
     float radius = 48;
-    Character* character;
+    Soldier* character;
 
     void renderCircle(Item& item, sf::RenderTarget& target, float x, float y, bool active);
 
 public:
-    PlayerStatus(Character* character = nullptr) : character(character) {
+    PlayerStatus(Soldier* character = nullptr) : character(character) {
         itemCircle = TextureManager::instance().loadSprite("data/ui/itemCircle.png");
         itemCircle.setOrigin(itemCircle.getLocalBounds().width / 2, itemCircle.getLocalBounds().height / 2);
     }

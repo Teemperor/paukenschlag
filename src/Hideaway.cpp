@@ -16,16 +16,16 @@
 
 
 #include "Hideaway.h"
-#include "Character.h"
+#include <guard/Soldier.h>
 
 void Hideaway::startContact(GameObject* other) {
-    if (dynamic_cast<Character*>(other)) {
+    if (dynamic_cast<Soldier*>(other) && dynamic_cast<Soldier*>(other)->isPlayer()) {
         playersInside++;
     }
 }
 
 void Hideaway::endContact(GameObject* other) {
-    if (dynamic_cast<Character*>(other)) {
+    if (dynamic_cast<Soldier*>(other) && dynamic_cast<Soldier*>(other)->isPlayer()) {
         playersInside--;
     }
 }

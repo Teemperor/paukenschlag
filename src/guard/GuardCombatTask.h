@@ -19,12 +19,11 @@
 #define SHOOTER_GUARDCOMBATTASK_H
 
 
-#include <Character.h>
 #include "GuardTask.h"
 
 class GuardCombatTask : public GuardTask {
 
-    Character* target = nullptr;
+    Soldier* target = nullptr;
 
 public:
     virtual void update(Soldier& guard, Level& level, double deltaT);

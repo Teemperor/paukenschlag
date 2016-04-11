@@ -17,7 +17,7 @@
 
 #include "PlayerStatus.h"
 #include <Item.h>
-#include "Character.h"
+#include <guard/Soldier.h>
 
 void PlayerStatus::draw(sf::RenderTarget& target, float x, float y) {
     x += itemCircle.getLocalBounds().width + radius;

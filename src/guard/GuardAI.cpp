@@ -17,7 +17,6 @@
 
 #include "GuardAI.h"
 #include <Level.h>
-#include <Character.h>
 #include <LOSChecker.h>
 #include "Soldier.h"
 #include "GuardMonitorTask.h"
@@ -50,7 +49,7 @@ void GuardAI::checkPlayerVisibility(Soldier& guard, Level& level, double deltaT)
 
     guard.visible_ = false;
 
-    for (Character* player : level.players()) {
+    for (Soldier* player : level.players()) {
         bool hasLOS = LOSChecker::canSee(level, guard.body()->GetPosition(), player->body());
 
         if (hasLOS)

@@ -18,7 +18,7 @@
 #include "PlayerViewport.h"
 #include "Level.h"
 #include "SoundManager.h"
-#include <Character.h>
+#include <guard/Soldier.h>
 
 void PlayerViewport::renderEffects(Level& level) {
     for (Effect& effect : effects_) {
@@ -110,7 +110,8 @@ PlayerViewport::~PlayerViewport() {
     SoundManager::instance().removeViewport(this);
 }
 
-void PlayerViewport::player(Character* player) {
+void PlayerViewport::player(Soldier* player) {
     player_ = player;
     status = PlayerStatus(player);
+    player_->setIsPlayer(true);
 }

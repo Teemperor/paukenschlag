@@ -21,6 +21,8 @@
 #include <iostream>
 #include <LegAnimation.h>
 #include <LongEffect.h>
+#include <BodyAnimation.h>
+#include <ItemList.h>
 #include "GameObject.h"
 #include "TextureManager.h"
 #include "Level.h"
@@ -43,8 +45,6 @@ class Soldier : public GameObject {
     const float walkSpeed = 350.0f;
     const float runSpeed = 850.0f;
 
-    Item weapon_;
-
     float headRotation = 0;
     float headRotationTarget = 0;
 
@@ -54,7 +54,7 @@ class Soldier : public GameObject {
 
     bool dead_ = false;
 
-    LegAnimation legAnimation;
+    LegAnimation legAnimation_;
     BodyAnimation bodyAnimation_;
 
     FOVIndicator fovIndicator;
@@ -67,73 +67,53 @@ class Soldier : public GameObject {
 
     int usedHideaways = 0;
 
+    bool isPlayer_ = false;
+
+    b2Vec2 aimTarget;
+    double walkAngle = 0;
+    Item items_[4] = {ItemList::get(ItemId::Knife),
+                      ItemList::get(ItemId::AK47),
+                      ItemList::get(ItemId::Glock),
+                      ItemList::get(ItemId::Pistol9mmSilenced)};
+    unsigned selectedItem_ = rand() % 2 + 1;
+    float controlX = 0;
+    float controlY = 0;
+
+
 public:
-    Soldier(Level &level, float x, float y) : GameObject(&level), legAnimation("data/guard/legs.png", 14, 12) {
-        sprite_ = TextureManager::instance().loadSprite("data/guard/idle.png");
-        sprite_.setOrigin(20, 20);
-
-        if (Utils::rndGen() % 100 < 30) {
-            weapon_ = ItemList::get(ItemId::AK47);
-        } else {
-            weapon_ = ItemList::get(ItemId::Glock);
-        }
-
-        headSprite_ = TextureManager::instance().loadSprite("data/guard/helmet.png");
-        headSprite_.setOrigin(9, 8);
-
-        deadSprite_ = TextureManager::instance().loadSprite("data/guard/dead.png");
-        deadSprite_.setOrigin(40, 45);
-
-        initBodyAnimation();
-
-        b2BodyDef BodyDef;
-        BodyDef.position = b2Vec2(x / SCALE, y / SCALE);
-        BodyDef.type = b2_dynamicBody;
-        BodyDef.linearDamping = 9;
-        b2Body *Body = level.world().CreateBody(&BodyDef);
-        Body->SetFixedRotation(true);
-
-        b2CircleShape Shape;
-        Shape.m_radius = 16 / SCALE;
-        b2FixtureDef FixtureDef;
-        FixtureDef.density = 15.f;
-        FixtureDef.filter.categoryBits = objectCategory::ENEMY;
-        FixtureDef.filter.maskBits = ~objectCategory::ENEMY;
-        FixtureDef.friction = friction;
-        FixtureDef.shape = &Shape;
-        FixtureDef.userData = this;
-        Body->CreateFixture(&FixtureDef);
-
-        body(Body);
-        level.add(this);
-    }
+    Soldier(Level &level, float x, float y);
 
     virtual void startContact(GameObject* other) override;
 
     virtual void endContact(GameObject* other) override;
 
-    virtual void render(PlayerViewport &viewport) override {
-        if (dead_) {
-            deadSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-            deadSprite_.setRotation(body()->GetAngle() * 180 / b2_pi);
-            viewport.window().draw(deadSprite_);
-        } else {
-            fovIndicator.render(viewport, position(), getViewDirection(), ai_.fieldOfView(), ai_.suspicion(), alpha_);
+    virtual void render(PlayerViewport &viewport) override;
 
-            legAnimation.render(position(), body()->GetAngle(), viewport, alpha_);
+    void setIsPlayer(bool isPlayer);
 
-            bodyAnimation_.draw(weapon_, viewport, position(), body()->GetAngle(), alpha_);
-
-            headSprite_.setPosition(SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y);
-            headSprite_.setRotation((body()->GetAngle() + headRotation) * 180 / b2_pi);
-            headSprite_.setColor(sf::Color(255, 255, 255, (sf::Uint8) (255 * alpha_)));
-            viewport.window().draw(headSprite_);
-
-            //suspicionIndicator_.draw(viewport, SCALE * body()->GetPosition().x, SCALE * body()->GetPosition().y - 40, ai_.suspicion());
-        }
+    bool isPlayer() const {
+        return isPlayer_;
     }
 
+    Item& currentItem() {
+        return items_[selectedItem_];
+    }
 
+    Item* items() {
+        return items_;
+    }
+
+    unsigned selectedItemIndex() {
+        return selectedItem_;
+    }
+
+    bool hidden() {
+        return usedHideaways != 0;
+    }
+
+    void pullTrigger() {
+        currentItem().tryUse(level(), body()->GetPosition(), aimTarget);
+    }
 
     void rotateTo(const b2Vec2& target) {
         body()->SetTransform(body()->GetPosition(),
@@ -141,14 +121,14 @@ public:
     }
 
     void walkForward() {
-        legAnimation.state(LegAnimation::State::Walking);
+        legAnimation_.state(LegAnimation::State::Walking);
         body()->ApplyForce(b2Vec2((float32) (std::cos(body()->GetAngle()) * walkSpeed),
                                   (float32) (std::cos(body()->GetAngle() - M_PI / 2) * walkSpeed)),
                            body()->GetWorldCenter(), true);
     }
 
     void runForward() {
-        legAnimation.state(LegAnimation::State::Running);
+        legAnimation_.state(LegAnimation::State::Running);
         body()->ApplyForce(b2Vec2((float32) (std::cos(body()->GetAngle()) * runSpeed),
                                   (float32) (std::cos(body()->GetAngle() - M_PI / 2) * runSpeed)),
                            body()->GetWorldCenter(), true);
@@ -156,7 +136,7 @@ public:
     }
 
     void stopWalking() {
-        legAnimation.state(LegAnimation::State::Standing);
+        legAnimation_.state(LegAnimation::State::Standing);
     }
 
     GuardAI& ai() {
@@ -185,10 +165,6 @@ public:
 
     float getViewDirection() {
         return body()->GetAngle() + headRotation;
-    }
-
-    Item & weapon() {
-        return weapon_;
     }
 
     bool dead() const {

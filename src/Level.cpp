@@ -16,7 +16,7 @@
 
 
 #include "Level.h"
-#include "Character.h"
+#include "guard/Soldier.h"
 
 const std::string fragmentShader =
     "uniform sampler2D texture;\n"
@@ -29,15 +29,13 @@ const std::string fragmentShader =
     "    gl_FragColor = gl_Color * alphaPixel.w * pixel;\n" //  gl_Color * alphaPixel.w * pixel
     "}";
 
-void Level::add(Character* object) {
-    objects_.push_back(object);
+void Level::addPlayer(Soldier* object) {
     players_.push_back(object);
 }
 
 void Level::render(PlayerViewport& viewport) {
 
     alphaTexture.setView(viewport.window().getView());
-
 
     renderTexture.setView(viewport.window().getView());
     sf::View viewBak = viewport.window().getView();
